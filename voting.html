@@ -9,16 +9,84 @@
   #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 4em; text-align: center; }
   </style>
 
+  
+
+<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyC7DqgTW-C7GrjRsGjd-D6jN4k_-h6MTCA",
+    authDomain: "voting-a1fe7.firebaseapp.com",
+    databaseURL: "https://voting-a1fe7.firebaseio.com",
+    projectId: "voting-a1fe7",
+    storageBucket: "",
+    messagingSenderId: "805283765249"
+  };
+  firebase.initializeApp(config);
+</script>  
 
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="js/jquery.ui.touch-punch.min.js"></script>
 <script>
-  $( function() {
+  $( 
+  
+  function() {
+   
+  });
+  
+  
+  $( document ).ready(function() {
+ 
     $( "#sortable" ).sortable();
     $( "#sortable" ).disableSelection();
-  } );
+	
+	window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('signin', {
+	  'size': 'invisible',
+	  'callback': function(response) {
+		// reCAPTCHA solved, allow signInWithPhoneNumber.
+		onSignInSubmit();
+	  }
+	});	
+	
+	
+	$("#signin").click(function( event ) { 
+        alert( "Phone number '" + $("#phonenumber").val() + "'");
+		var phoneNumber = $("#phonenumber").val();
+		
+		var appVerifier = window.recaptchaVerifier;
+		firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+			.then(function (confirmationResult) {
+			  // SMS sent. Prompt user to type the code from the message, then sign the
+			  // user in with confirmationResult.confirm(code).
+			  window.confirmationResult = confirmationResult;
+			}).catch(function (error) {
+			  // Error; SMS not sent
+			  // ...
+			  alert("Something went wrong" + error);
+		});
+    });
+	
+	$("#confirm").click(function(event){
+		var code = $("#code").val();
+		alert( "code '" + code + "'");
+		
+		confirmationResult.confirm(code).then(function (result) {
+		  // User signed in successfully.
+		  var user = result.user;
+		  // ...
+		  alert(user);
+		}).catch(function (error) {
+		  // User couldn't sign in (bad verification code?)
+		  // ...
+		});		
+		
+	});
+ 
+});
+  
+  
 </script>
   
   
@@ -29,6 +97,10 @@
 <div data-role="page">
   <div data-role="header">
     <h1>Welcome To My Homepage</h1>
+	<input type="text" id="phonenumber"></input>
+	<input type="button" id="signin" value="Sign In"></input>
+	<input type="text" id="phonecode"></input>
+	<input type="button" id="confirm" value="Confirm Code"></input>
   </div>
 
   <div data-role="main" class="ui-content">
