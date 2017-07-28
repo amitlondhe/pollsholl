@@ -42,15 +42,6 @@
     $( "#sortable" ).sortable();
     $( "#sortable" ).disableSelection();
 	
-	window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('signin', {
-	  'size': 'invisible',
-	  'callback': function(response) {
-		// reCAPTCHA solved, allow signInWithPhoneNumber.
-		onSignInSubmit();
-	  }
-	});	
-	
-	
 	$("#signin").click(function( event ) { 
         alert( "Phone number '" + $("#phonenumber").val() + "'");
 		var phoneNumber = $("#phonenumber").val();
@@ -59,7 +50,7 @@
 			  'size': 'invisible',
 			  'callback': function(response) {
 				// reCAPTCHA solved, allow signInWithPhoneNumber.
-				onSignInSubmit();
+				//onSignInSubmit();
 				firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
 					.then(function (confirmationResult) {
 					  // SMS sent. Prompt user to type the code from the message, then sign the
