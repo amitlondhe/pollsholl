@@ -59,7 +59,7 @@
 			  'size': 'invisible',
 			  'callback': function(response) {
 				// reCAPTCHA solved, allow signInWithPhoneNumber.
-				onSignInSubmit();
+				//onSignInSubmit();
 				firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
 					.then(function (confirmationResult) {
 					  // SMS sent. Prompt user to type the code from the message, then sign the
