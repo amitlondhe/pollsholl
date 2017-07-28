@@ -42,15 +42,6 @@
     $( "#sortable" ).sortable();
     $( "#sortable" ).disableSelection();
 	
-	window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('signin', {
-	  'size': 'invisible',
-	  'callback': function(response) {
-		// reCAPTCHA solved, allow signInWithPhoneNumber.
-		onSignInSubmit();
-	  }
-	});	
-	
-	
 	$("#signin").click(function( event ) { 
         alert( "Phone number '" + $("#phonenumber").val() + "'");
 		var phoneNumber = $("#phonenumber").val();
