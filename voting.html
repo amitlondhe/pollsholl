@@ -30,40 +30,38 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="js/jquery.ui.touch-punch.min.js"></script>
 <script>
-  $( 
-  
-  function() {
-   
-  });
-  
-  
+ 
   $( document ).ready(function() {
  
     $( "#sortable" ).sortable();
     $( "#sortable" ).disableSelection();
 	
+	function onSignInSubmit(phoneNumber) {
+		firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+			.then(function (confirmationResult) {
+			  // SMS sent. Prompt user to type the code from the message, then sign the
+			  // user in with confirmationResult.confirm(code).
+			  window.confirmationResult = confirmationResult;
+			}).catch(function (error) {
+			  // Error; SMS not sent
+			  // ...
+			  alert("Something went wrong" + error);
+		});	
+	}
+	
+	window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('signin', {
+		  'size': 'invisible',
+		  /*'callback': function(response) {
+			// reCAPTCHA solved, allow signInWithPhoneNumber.
+			onSignInSubmit();
+		  }*/
+	});	
+	var appVerifier = window.recaptchaVerifier;
+	
 	$("#signin").click(function( event ) { 
         alert( "Phone number '" + $("#phonenumber").val() + "'");
 		var phoneNumber = $("#phonenumber").val();
-		
-		window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('signin', {
-			  'size': 'invisible',
-			  'callback': function(response) {
-				// reCAPTCHA solved, allow signInWithPhoneNumber.
-				//onSignInSubmit();
-				firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-					.then(function (confirmationResult) {
-					  // SMS sent. Prompt user to type the code from the message, then sign the
-					  // user in with confirmationResult.confirm(code).
-					  window.confirmationResult = confirmationResult;
-					}).catch(function (error) {
-					  // Error; SMS not sent
-					  // ...
-					  alert("Something went wrong" + error);
-				});
-			  }
-		});
-		var appVerifier = window.recaptchaVerifier;
+		onSignInSubmit(phoneNumber);
     });
 	
 	$("#confirm").click(function(event){
