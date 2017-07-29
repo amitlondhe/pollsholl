@@ -44,7 +44,6 @@
 			  window.confirmationResult = confirmationResult;
 			}).catch(function (error) {
 			  // Error; SMS not sent
-			  // ...
 			  console.log(error.message);
 			  alert("Something went wrong" + error);
 		});	
@@ -64,7 +63,6 @@
 	$("#confirm").click(function(event){
 		var code = $("#phonecode").val();
 		alert( "code '" + code + "'");
-		
 		confirmationResult.confirm(code).then(function (result) {
 		  // User signed in successfully.
 		  var user = result.user;
@@ -73,13 +71,11 @@
 		}).catch(function (error) {
 		  // User couldn't sign in (bad verification code?)
 		  // ...
-		});		
-		
+		});
 	});
  
 });
-  
-  
+
 </script>
   
   
