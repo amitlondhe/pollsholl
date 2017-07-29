@@ -1,24 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Voting App</title>
+  <title>Select your favorite Lightning Talks</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<style>
-	#sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+	#sortable { list-style-type: none; margin: 0; padding: 0; width: 80%; }
 	#sortable li { margin: 0 10px 10px 10px; padding: 1em; padding-left: 1.5em; font-size: 1.4em; height: auto; }
-	#sortable li span { position: absolute; margin-left: -1.3em; }
+
+    .bg-1 { 
+       background-color: #140a67; /* Green */
+       color: #ffffff;
+    }
+
+	.bg-2 { 
+       background-color: #c4f13c; /* Green */
+       color: #ffffff;
+    }	
+	
+	.radius {
+		border-radius:20%;
+	}
+	
 	</style>  
   
   
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+  <!--
   <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+   -->
+   
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="js/jquery.ui.touch-punch.min.js"></script>
 
@@ -30,25 +48,34 @@
   </script>
   
 </head>
-<body>
+<body class="bg-1">
 
-<div class="jumbotron text-center">
+<div class="container-fluid bg-1 text-center ">
   <h1>Vote for Lightning Talk</h1>
-  <p>Move the Talk you love to Top</p> 
+  <p>{ Move the Talk you love to Top }</p> 
 </div>
   
-<div class="container">
+<div class="container-fluid bg-2">
   <div class="row">
 		<div class="ui-content">
-		<ul id="sortable" class="list-group">
-			<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Talk 1</li>
-			<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Talk 2</li>
-			<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Talk 3</li>
-			<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Talk 4</li>
-			<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Talk 5</li>
-			<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Talk 6</li>
-			<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Talk 7</li>
-		</ul>
+			<ul id="sortable" class="list-group">
+			    
+			    <li class="ui-state-default">
+					<img class="img-circle img-responsive" style="border-radius:20%" src="https://www.w3schools.com/bootstrap/img_chania.jpg" alt="Chania" width="15%" height="10%"> This is a lightning talk
+				</li>
+				
+				<li class="ui-state-default">
+					<div class="media">
+					  <div class="media-left">
+						<img src="https://www.w3schools.com/bootstrap/img_chania.jpg" class="media-object img-circle" style="border-radius:20%;height:30% " >
+					  </div>
+					  <div class="media-body">
+						<h4 class="media-heading">Lightning Talk Title</h4>
+						<p>Lightning talk content ....</p>
+					  </div>
+					</div>				
+				</li>
+			</ul>
 		</div>
   </div>
 </div>
