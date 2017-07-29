@@ -45,16 +45,13 @@
 			}).catch(function (error) {
 			  // Error; SMS not sent
 			  // ...
+			  console.log(error.message);
 			  alert("Something went wrong" + error);
 		});	
 	}
 	
 	window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('signin', {
-		  'size': 'invisible',
-		  /*'callback': function(response) {
-			// reCAPTCHA solved, allow signInWithPhoneNumber.
-			onSignInSubmit();
-		  }*/
+		  'size': 'invisible'
 	});	
 	var appVerifier = window.recaptchaVerifier;
 	
@@ -65,7 +62,7 @@
     });
 	
 	$("#confirm").click(function(event){
-		var code = $("#code").val();
+		var code = $("#phonecode").val();
 		alert( "code '" + code + "'");
 		
 		confirmationResult.confirm(code).then(function (result) {
