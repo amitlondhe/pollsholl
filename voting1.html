@@ -8,25 +8,37 @@
 	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<style>
-	#sortable { list-style-type: none; margin: 0; padding: 0; width: 80%; }
-	#sortable li { margin: 0 10px 10px 10px; padding: 1em; padding-left: 1.5em; font-size: 1.4em; height: auto; }
+		#sortable { list-style-type: none; margin: 0; padding: 0; width: 80%; }
+		#sortable li { margin: 0 10px 10px 10px; padding: 1em; padding-left: 1.5em; font-size: 1.4em; height: auto; }
 
-    .bg-1 { 
-       background-color: #2d1daf; /* Green */
-       color: #ffffff;
-    }
+		.bg-1 { 
+		   background-color: #2d1daf; /* Green */
+		   color: #ffffff;
+		}
 
-	.bg-2 { 
-       background-color: #8ade98; /* Green */
-       color: #ffffff;
-    }	
-	
-	.radius {
-		border-radius:20%;
-	}
-	
+		.bg-2 { 
+		   background-color: #8ade98; /* Green */
+		   color: #ffffff;
+		}	
+		
+		.radius {
+			border-radius:20%;
+		}
 	</style>  
   
+	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyC7DqgTW-C7GrjRsGjd-D6jN4k_-h6MTCA",
+		authDomain: "voting-a1fe7.firebaseapp.com",
+		databaseURL: "https://voting-a1fe7.firebaseio.com",
+		projectId: "voting-a1fe7",
+		storageBucket: "",
+		messagingSenderId: "805283765249"
+	  };
+	  firebase.initializeApp(config);
+	</script>  
   
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -49,17 +61,58 @@
 	
 	$("#getcode").click(function(){
 		alert("get Code");
-		$("#entercode").show();
-		$("#getcode").prop( "disabled", true );
+		var phoneNumber = $("#phonenumber").val();
+		phoneNumber = "+1"+phoneNumber;
+		alert("Signing you in with "  + phoneNumber);
+		onSignInSubmit(phoneNumber);		
 	});
 	
 	$("#signinbutton").click(function(){
-		alert("Signing you in");
-		$("#signin").hide();
-		$("#talks").show();
+	    $("#signinbutton").prop( "disabled", true);
+		var code = $("#passcode").val();
+		alert( "code '" + code + "'");
+		confirmationResult.confirm(code).then(function (result) {
+		  // User signed in successfully.
+		  var user = result.user;
+		  alert("Sign in Complete " + user);
+		  $("#signin").hide();
+		  $("#talks").show();
+		}).catch(function (error) {
+		  // User couldn't sign in (bad verification code?)
+		  // ...
+		  $("#signin").show();
+		  $("#entercode").hide();
+		  $("#getcode").prop( "disabled", false );
+		  $("#signinbutton").prop( "disabled", false);
+		});	
+		
+		
 	});
 	
-	});
+	function onSignInSubmit(phoneNumber) {
+		firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+			.then(function (confirmationResult) {
+			  // SMS sent. Prompt user to type the code from the message, then sign the
+			  // user in with confirmationResult.confirm(code).
+			  window.confirmationResult = confirmationResult;
+			  alert("Signed in Successfully.");
+			  $("#entercode").show();
+			  $("#getcode").prop( "disabled", true );
+			}).catch(function (error) {
+			  // Error; SMS not sent
+			  console.log(error.message);
+			  alert("Something went wrong" + error);
+		});	
+	}
+	
+	window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('signin', {
+		  'size': 'invisible'
+	});	
+	var appVerifier = window.recaptchaVerifier;	
+	
+	
+	
+  });
   </script>
   
 </head>
@@ -77,10 +130,11 @@
 		  <div class="form-group row">
 			<div class="col-xs-3">
 				<label for="phonenumber">Phone Number:</label>
-				<input type="phone" class="form-control col-sm-5" id="phonenumber" size="10" maxlength="10" >
+				<input type="phone" class="form-control col-sm-5 " id="phonenumber" size="10" maxlength="10" >
 			</div>
 		  </div>
-		  <button type="button" class="btn btn-default" id="getcode">Get Code</button>
+		  <button type="button" class="btn btn-primary" id="getcode">
+		  Get Code</button>
 	  </div>
 	  
 	  <div id="entercode" style="display:none">
@@ -90,7 +144,7 @@
 				<input type="text" class="form-control" id="passcode">
 			</div>
 		  </div>
-		  <button type="button" class="btn btn-default" id="signinbutton">Sign in</button>
+		  <button type="button" class="btn btn-primary" id="signinbutton">Sign in</button>
 	  </div>
 	</form>
    </div>
