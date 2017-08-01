@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Add Lightning Talks</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<style>
+		#sortable { list-style-type: none; margin: 0; padding: 0; width: 80%; }
+		#sortable li { margin: 0 10px 10px 10px; padding: 1em; padding-left: 1.5em; font-size: 1.4em; height: auto; }
+
+		.bg-1 { 
+		   background-color: #2b2b2f; /* Green */
+		   color: #ffffff;
+		}
+
+		.bg-2 { 
+		   background-color: #7a7784; /* Green */
+		   color: #ffffff;
+		}	
+		
+		.radius {
+			border-radius:20%;
+		}
+		
+		.success-message {			   
+		   color: green;
+		}
+		
+		.failure-message {			   
+		   color: orange;
+		}
+		
+	</style>  
+  
+	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyC7DqgTW-C7GrjRsGjd-D6jN4k_-h6MTCA",
+		authDomain: "voting-a1fe7.firebaseapp.com",
+		databaseURL: "https://voting-a1fe7.firebaseio.com",
+		projectId: "voting-a1fe7",
+		storageBucket: "",
+		messagingSenderId: "805283765249"
+	  };
+	  firebase.initializeApp(config);
+	</script>  
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+  <!--
+  <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+   -->
+   
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="js/jquery.ui.touch-punch.min.js"></script>
+
+  <script>
+ 
+  $(document).ready(function() { 
+	
+	$("#addlightningtalk").click(function(){
+		save_new_lightning_talk();
+	});
+	
+	
+	/*window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('getcode', {
+		  'size': 'invisible'
+	});	
+	var appVerifier = window.recaptchaVerifier;	*/
+	
+	function save_new_lightning_talk() {		
+		var speakername = $('#speakername').val();
+		var topic = $('#topic').val();
+		var abstractdesc = $('#abstract').val();
+		// Get a reference to the database service
+		var database = firebase.database();
+		firebase.database().ref('entries/' + speakername).set({
+			name: speakername,
+			topic: topic,
+			desc: abstractdesc,
+		}).then(function(value){
+			console.log("Successfully added the lightning talk" + value);
+			$("#usermessage").html("<h3 class='success-message'> Successfully added the lightning talk </h3>");
+			$("#usermessage").show();
+			$("#add-talk-screen").hide();
+		}).catch(function(e){
+			console.log("Failed adding lightning talk " + e);
+			$("#usermessage").html("<h3 class='failure-message'> Failed to add the lightning talk </h3>");
+			$("#usermessage").show();
+		});				
+	}
+	
+  });
+  </script>
+  
+</head>
+<body class="bg-2">
+
+<div class="container-fluid bg-1 text-center ">
+  <h1>Submit Lightning Talk </h1>
+  <p>{ Do we need any message here? }</p> 
+</div>
+  
+<div class="container-fluid bg-2">
+   <div id="add-talk-screen">
+	<form>
+	  <div id=add-talk">
+		  <div class="form-group row">
+			<div class="col-xs-3">
+				<label for="speakername">Name of Speakar :</label>
+				<input type="text" class="form-control col-sm-5 " id="speakername" />
+			</div>
+		  </div>
+	  </div>
+	  <div class="form-group row">
+		<div class="col-xs-3">
+			<label for="topic">Topic :</label>
+			<input type="text" class="form-control" id="topic"/>
+		</div>
+	  </div>
+	  <div class="form-group row">
+		<div class="col-xs-3">
+			<label for="abstract">Abstract (Couple of lines) :</label>
+			<textarea class="form-control" id="abstract" rows="5"></textarea>
+		</div>
+	  </div>
+	  <button type="button" class="btn btn-primary" id="addlightningtalk"> Add Lightning Talk </button>
+	</form>
+   </div>
+   
+   <div id="usermessage" class="jumbotron" style="display:none;margin-top:1em">   
+   </div>
+</div>
+
+</body>
+</html>
