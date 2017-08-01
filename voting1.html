@@ -55,10 +55,25 @@
   <script>
  
   $(document).ready(function() { 
-    $( "#sortable" ).sortable();
+    //$( "#sortable" ).sortable();
+	var userid = "";
+	$('#sortable').sortable({
+		update: function () { save_new_order() }
+	});
+
     $( "#sortable" ).disableSelection();
 	$("#entercode").hide();
 	
+	$("#getcode").click(function(){
+		$("#entercode").show();
+		$("#getcode").prop( "disabled", true );
+	});
+	$("#signinbutton").click(function(){
+		$("#signin").hide();
+		$("#talks").show();
+	});
+	
+	/*
 	$("#getcode").click(function(){
 		alert("get Code");
 		var phoneNumber = $("#phonenumber").val();
@@ -74,7 +89,9 @@
 		confirmationResult.confirm(code).then(function (result) {
 		  // User signed in successfully.
 		  var user = result.user;
-		  alert("Sign in Complete " + user);
+		  userid = user.uid;
+		  alert("Sign in Complete " + uid);
+		  console.log("Sign in Complete and User Id is" + uid);
 		  $("#signin").hide();
 		  $("#talks").show();
 		}).catch(function (error) {
@@ -85,9 +102,8 @@
 		  $("#getcode").prop( "disabled", false );
 		  $("#signinbutton").prop( "disabled", false);
 		});	
-		
-		
 	});
+	*/
 	
 	function onSignInSubmit(phoneNumber) {
 		firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
@@ -109,6 +125,34 @@
 		  'size': 'invisible'
 	});	
 	var appVerifier = window.recaptchaVerifier;	
+	
+	function save_new_order() {
+		var a = [];
+		
+		alert("Top Selection " + $('#sortable').children().first().attr('id'));
+		
+		console.log("Top Selection " + $('#sortable').children().first().attr('id'));
+		var toptalkid = $('#sortable').children().first().attr('id');
+		// Get a reference to the database service
+		var database = firebase.database();
+		writeUserData(1,toptalkid);
+	}
+	
+	
+	/*
+	Default security rule
+	{
+		"rules": {
+			".read": "auth != null",
+			".write": "auth != null"
+		}
+	}
+	*/
+	function writeUserData(userId, talkid) {
+		firebase.database().ref('users/' + userId).set({
+			toptalk: talkid
+		});
+	}
 	
 	
 	
@@ -153,17 +197,17 @@
 		<div class="ui-content">
 			<ul id="sortable" class="list-group">
 			    
-			    <li class="ui-state-default">
-					<img class="img-circle img-responsive" style="border-radius:20%" src="https://www.w3schools.com/bootstrap/img_chania.jpg" alt="Chania" width="15%" height="10%"> This is a lightning talk
+			    <li class="ui-state-default" id="talk1">
+					<img class="img-circle img-responsive" style="border-radius:20%" src="https://www.w3schools.com/bootstrap/img_chania.jpg" alt="Chania" width="15%" height="10%"> This is a First lightning talk
 				</li>
 				
-				<li class="ui-state-default">
+				<li class="ui-state-default" id="talk2">
 					<div class="media">
 					  <div class="media-left">
 						<img src="https://www.w3schools.com/bootstrap/img_chania.jpg" class="media-object img-circle" style="border-radius:20%;height:30% " >
 					  </div>
 					  <div class="media-body">
-						<h4 class="media-heading">Lightning Talk Title</h4>
+						<h4 class="media-heading">This is a second lightning talk</h4>
 						<p>Lightning talk content ....</p>
 					  </div>
 					</div>				
