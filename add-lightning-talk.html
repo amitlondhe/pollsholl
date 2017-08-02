@@ -66,13 +66,38 @@
   $(document).ready(function() { 
 	
 	$("#addlightningtalk").click(function(){
-		save_new_lightning_talk();
-	});
-
-	function save_new_lightning_talk() {		
+	    $("#validationmsgs").empty();
+		$("#validationmsgsdiv").hide();
 		var speakername = $('#speakername').val();
 		var topic = $('#topic').val();
 		var abstractdesc = $('#abstract').val();
+		var validentry = true;
+		
+		if(speakername == "") {
+			$("#validationmsgs").append("<li> Speaker Name cannot be Empty </li>");
+			validentry = false;
+		} 
+		
+		if(topic == "") {
+			$("#validationmsgs").append("<li> Topic cannot be Empty </li>");
+			validentry = false;
+		} 
+		
+		if(abstractdesc == "") {
+			$("#validationmsgs").append("<li> Abstract cannot be Empty </li>");
+			validentry = false;
+		} 	
+		
+		if(validentry == false) {
+			$("#validationmsgsdiv").show();
+		} else {
+			$("#add-talk-screen").hide();
+			save_new_lightning_talk(speakername,topic,abstractdesc);
+		}
+	});
+
+	function save_new_lightning_talk(speakername,topic,abstractdesc) {		
+		
 		// Get a reference to the database service
 		var database = firebase.database();
 		firebase.database().ref('entries/' + speakername).set({
@@ -80,10 +105,14 @@
 			topic: topic,
 			desc: abstractdesc,
 		}).then(function(value){
-			console.log("Successfully added the lightning talk" + value);
-			$("#usermessage").html("<h3 class='success-message'> Successfully added the lightning talk </h3>");
+			console.log("Successfully added the lightning talk " + value);
+			var html = '<h3 class="success-message"> <span class="glyphicons glyphicons-cloud-upload"></span> Successfully added the lightning talk </h3>' +
+						'<a href="add-lightning-talk.html" class="btn btn-info" role="button">Add Another Lightning Talk</a>';
+			
+			
+			$("#usermessage").html(html);
 			$("#usermessage").show();
-			$("#add-talk-screen").hide();
+			
 		}).catch(function(e){
 			console.log("Failed adding lightning talk " + e);
 			$("#usermessage").html("<h3 class='failure-message'> Failed to add the lightning talk </h3>");
@@ -103,6 +132,12 @@
 </div>
   
 <div class="container-fluid bg-2">
+
+	<div  id="validationmsgsdiv" class="alert alert-danger" style="display:none" >
+		<ul id="validationmsgs" style="list-style-type:disc">
+		</ul> 
+	</div>
+  
    <div id="add-talk-screen">
 	<form>
 	  <div id=add-talk">
@@ -129,7 +164,8 @@
 	</form>
    </div>
    
-   <div id="usermessage" class="jumbotron" style="display:none;margin-top:1em">   
+   <div id="usermessage" class="jumbotron" style="display:none;margin-top:1em">  
+		<button type="button" class="btn btn-primary btn-lg" id="addlightningtalk"> Add Lightning Talk </button>
    </div>
 </div>
 
