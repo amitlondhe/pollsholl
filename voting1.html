@@ -12,12 +12,12 @@
 		#sortable li { margin: 0 10px 10px 10px; padding: 1em; padding-left: 1.5em; font-size: 1.4em; height: auto; }
 
 		.bg-1 { 
-		   background-color: #2d1daf; /* Green */
+		   background-color:  #2b2b2f;; /* black */
 		   color: #ffffff;
 		}
 
 		.bg-2 { 
-		   background-color: #8ade98; /* Green */
+		   background-color: #7a7784; /* grey */
 		   color: #ffffff;
 		}	
 		
@@ -55,7 +55,23 @@
   <script>
  
   $(document).ready(function() { 
+  
+	var entryHtml = '<li class="ui-state-default" id="#id">'+
+					'<div class="media">' + 
+					  '<div class="media-left">' +
+						'<img src="https://www.w3schools.com/bootstrap/img_chania.jpg" class="media-object img-circle" style="border-radius:20%;height:30% " >' +
+					  '</div>' + 
+					  '<div class="media-body">' + 
+						'<h4 class="media-heading">#topic</h4>' + 
+						'<p>#abstract</p>' +
+					  '</div>' + 
+					'</div>' + 				
+				'</li>';
+  
     //$( "#sortable" ).sortable();
+	
+	readEntries();
+	
 	var userid = "";
 	$('#sortable').sortable({
 		update: function () { save_new_order() }
@@ -154,6 +170,29 @@
 		});
 	}
 	
+	function readEntries() {
+		firebase.database().ref('/entries/').once('value').then(function(snapshot) {
+		  /*var lightningTalks = snapshot.val();
+		  console.log(lightningTalks);*/
+		  snapshot.forEach(function(lightningTalk){
+			var key = lightningTalk.key;
+			console.log("Key ***" + key);
+			// childData will be the actual contents of the child
+			var childData = lightningTalk.val();
+			console.log("Val ***" + childData);
+			//var obj = jQuery.parseJSON(childData);
+			console.log(childData.name);
+			console.log(childData.topic);
+			console.log(childData.desc);
+			
+			var talkHtml = entryHtml;
+			talkHtml = talkHtml.replace("#id",childData.name);
+			talkHtml = talkHtml.replace("#topic",childData.topic);
+			talkHtml = talkHtml.replace("#abstract",childData.desc);
+			$('#sortable').append(talkHtml);
+		  });
+		});	
+	}
 	
 	
   });
@@ -196,11 +235,8 @@
   <div class="row" id="talks" style="display:none">
 		<div class="ui-content">
 			<ul id="sortable" class="list-group">
-			    
-			    <li class="ui-state-default" id="talk1">
-					<img class="img-circle img-responsive" style="border-radius:20%" src="https://www.w3schools.com/bootstrap/img_chania.jpg" alt="Chania" width="15%" height="10%"> This is a First lightning talk
-				</li>
-				
+			
+				<!--
 				<li class="ui-state-default" id="talk2">
 					<div class="media">
 					  <div class="media-left">
@@ -212,6 +248,8 @@
 					  </div>
 					</div>				
 				</li>
+				-->
+				
 			</ul>
 		</div>
   </div>
