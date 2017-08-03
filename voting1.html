@@ -95,7 +95,6 @@
 	});
 	$("#signinbutton").click(function(){
 		$("#signin").hide();
-		//$("#talks").show();
 		$("#sortable").show();
 	});
 	
@@ -118,8 +117,7 @@
 		  userid = user.uid;
 		  alert("Sign in Complete " + uid);
 		  console.log("Sign in Complete and User Id is" + uid);
-		  $("#signin").hide();
-		  $("#talks").show();
+		  $("#signin").hide();		  
 		}).catch(function (error) {
 		  // User couldn't sign in (bad verification code?)
 		  // ...

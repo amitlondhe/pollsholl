@@ -1,23 +1,161 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
+  <title>Select your favorite Lightning Talks</title>
   <meta charset="utf-8">
-  <title>sortable demo</title>
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<style>
+		#sortable { list-style-type: none; margin: 0; padding: 0; width: 80%; }
+		#sortable li { margin: 0 10px 10px 10px; padding: 1em; padding-left: 1.5em; font-size: 1.4em; height: auto; }
+
+		.bg-1 { 
+		   background-color:  #2b2b2f;; /* black */
+		   color: #ffffff;
+		}
+
+		.bg-2 { 
+		   background-color: #7a7784; /* grey */
+		   color: #ffffff;
+		}	
+		
+		.radius {
+			border-radius:20%;
+		}
+		
+		li { border-radius:1em; }
+	</style>  
+  
+	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyC7DqgTW-C7GrjRsGjd-D6jN4k_-h6MTCA",
+		authDomain: "voting-a1fe7.firebaseapp.com",
+		databaseURL: "https://voting-a1fe7.firebaseio.com",
+		projectId: "voting-a1fe7",
+		storageBucket: "",
+		messagingSenderId: "805283765249"
+	  };
+	  firebase.initializeApp(config);
+	</script>  
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+  <!--
+  <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+   -->
+   
+  <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="js/jquery.ui.touch-punch.min.js"></script>
+
+  <script>
+ 
+  $(document).ready(function() { 
+  
+	var entryHtml = '<li class="ui-state-default" style="background-color:#af23a4;color:white" id="#id">' + 
+							'<div>Name  : #speaker</div>' +
+							'<div>' + 
+								'<h4>Topic : #topic</h4>' +
+								'<p>#abstract</p>' + 
+							'</div>' + 		    						
+					'</li>';
+  
+  
+	readEntries();
+	
+	var userid = "";
+	$('#sortable').sortable({
+	   scroll: true, 
+	   scrollSensitivity: 100 ,
+	   scrollSpeed: 50,
+	   placeholder: "ui-state-highlight",
+		//update: function () { save_new_order() }
+	});
+
+    $("#sortable" ).disableSelection();
+	$("#entercode").hide();
+	$("#sortable").show();
+	
+	$("#getcode").click(function(){
+		$("#entercode").show();
+		$("#getcode").prop( "disabled", true );
+	});
+	$("#signinbutton").click(function(){
+		$("#signin").hide();
+		$("#sortable").show();
+	});
+	
+	function readEntries() {
+		firebase.database().ref('/entries/').once('value').then(function(snapshot) {
+		  /*var lightningTalks = snapshot.val();
+		  console.log(lightningTalks);*/
+		  snapshot.forEach(function(lightningTalk){
+			var key = lightningTalk.key;
+			console.log("Key ***" + key);
+			// childData will be the actual contents of the child
+			var childData = lightningTalk.val();
+			console.log("Val ***" + childData);
+			console.log("name:" + childData.name + ", topic:" + childData.topic + ", desc:"+childData.desc);
+
+			var talkHtml = entryHtml;
+			talkHtml = talkHtml.replace("#id",childData.name);
+			talkHtml = talkHtml.replace("#speaker",childData.name);
+			talkHtml = talkHtml.replace("#topic",childData.topic);
+			talkHtml = talkHtml.replace("#abstract",childData.desc);
+			$('#sortable').append(talkHtml);
+		  });
+		});	
+	}
+  });
+  </script>
+  
 </head>
-<body>
- 
-<ul id="sortable">
-  <li>Item 1</li>
-  <li>Item 2</li>
-  <li>Item 3</li>
-  <li>Item 4</li>
-  <li>Item 5</li>
-</ul>
- 
-<script>$("#sortable").sortable();</script>
- 
+<body class="bg-2">
+
+<div class="container-fluid bg-1 text-center ">
+  <h1>Vote for Lightning Talk</h1>
+  <p>{ Move the Talk you love to Top }</p> 
+</div>
+  
+<div class="container-fluid bg-2">
+   <div id="signin">
+	<form>
+	  <div id=enterphone">
+		  <div class="form-group row">
+			<div class="col-sm-6">
+				<label for="phonenumber">Phone Number:</label>
+				<input type="phone" class="form-control col-sm-5 " id="phonenumber" size="10" maxlength="10" >
+			</div>
+		  </div>
+		  <button type="button" class="btn btn-primary" id="getcode">
+		  Get Code</button>
+	  </div>
+	  
+	  <div id="entercode" style="display:none">
+		  <div class="form-group row">
+			<div class="col-sm-6">
+				<label for="passcode">Passcode:</label>
+				<input type="text" class="form-control" id="passcode">
+			</div>
+		  </div>
+		  <button type="button" class="btn btn-primary" id="signinbutton">Sign in</button>
+	  </div>
+	</form>
+   </div>
+    <div class="row">
+	<ul id="sortable" class="list-group col-sm-12" style="margin:1em" >				
+	</ul> 
+    </div>	
+  
+</div>
+
+
+
 </body>
 </html>
