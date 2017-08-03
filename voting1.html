@@ -48,9 +48,9 @@
   
   <!--
   <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-  <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
    -->
    
+  <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="js/jquery.ui.touch-punch.min.js"></script>
 
@@ -78,11 +78,16 @@
 	
 	var userid = "";
 	$('#sortable').sortable({
-		update: function () { save_new_order() }
+	   scroll: true, 
+	   scrollSensitivity: 100 ,
+	   scrollSpeed: 50,
+	   placeholder: "ui-state-highlight",
+		//update: function () { save_new_order() }
 	});
 
     $("#sortable" ).disableSelection();
 	$("#entercode").hide();
+	$("#sortable").hide();
 	
 	$("#getcode").click(function(){
 		$("#entercode").show();
@@ -90,7 +95,8 @@
 	});
 	$("#signinbutton").click(function(){
 		$("#signin").hide();
-		$("#talks").show();
+		//$("#talks").show();
+		$("#sortable").show();
 	});
 	
 	/*
@@ -231,29 +237,13 @@
 	  </div>
 	</form>
    </div>
-
-  <div class="row" id="talks" style="display:none">
-		<div class="ui-content">
-			<ul id="sortable" class="list-group">
-			
-				<!--
-				<li class="ui-state-default" id="talk2">
-					<div class="media">
-					  <div class="media-left">
-						<img src="https://www.w3schools.com/bootstrap/img_chania.jpg" class="media-object img-circle" style="border-radius:20%;height:30% " >
-					  </div>
-					  <div class="media-body">
-						<h4 class="media-heading">This is a second lightning talk</h4>
-						<p>Lightning talk content ....</p>
-					  </div>
-					</div>				
-				</li>
-				-->
-				
-			</ul>
-		</div>
-  </div>
+  
+	<ul id="sortable" class="list-group" style="margin:1em">				
+	</ul>  
+  
 </div>
+
+
 
 </body>
 </html>
