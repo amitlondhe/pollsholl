@@ -1,136 +1,23 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <title>Select your favorite Lightning Talks</title>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
-	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-	<style>
-		#sortable { list-style-type: none; margin: 0; padding: 0; width: 80%; }
-		#sortable li { margin: 0 10px 10px 10px; padding: 1em; padding-left: 1.5em; font-size: 1.4em; height: auto; }
-
-		.bg-1 { 
-		   background-color:  #2b2b2f;; /* black */
-		   color: #ffffff;
-		}
-
-		.bg-2 { 
-		   background-color: #7a7784; /* grey */
-		   color: #ffffff;
-		}	
-		
-		.radius {
-			border-radius:20%;
-		}
-		
-		li {
-			border-radius:1em;
-		}
-		
-	</style>  
-  
-	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
-	<script>
-	  // Initialize Firebase
-	  var config = {
-		apiKey: "AIzaSyC7DqgTW-C7GrjRsGjd-D6jN4k_-h6MTCA",
-		authDomain: "voting-a1fe7.firebaseapp.com",
-		databaseURL: "https://voting-a1fe7.firebaseio.com",
-		projectId: "voting-a1fe7",
-		storageBucket: "",
-		messagingSenderId: "805283765249"
-	  };
-	  firebase.initializeApp(config);
-	</script>  
-  
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  
-  <!--
-  <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-  <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-   -->
-   
+  <title>sortable demo</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script src="js/jquery.ui.touch-punch.min.js"></script>
-
-  <script>
- 
-  $(document).ready(function() { 
-  
-
-	$('#sortable').sortable({
-		//update: function () { save_new_order() }
-	});
-	
-  });
-  </script>
-  
 </head>
-<body class="bg-2">
-
-<div class="container-fluid bg-1 text-center ">
-  <h1>Vote for Lightning Talk</h1>
-  <p>{ Move the Talk you love to Top }</p> 
-</div>
-  
-<div class="container-fluid bg-2">
-    <div class="row" id="talks" >
-		<div class="ui-content">
-			<ul id="sortable" class="list-group">
-			
-				<li class="ui-state-default" style="background-color:#af23a4;color:white" id="#id">
-					<div class="media"> 
-						<div class="media-left">
-							<img src="https://www.w3schools.com/bootstrap/img_chania.jpg" class="media-object img-circle" style="border-radius:20%;height:30% " >
-						</div> 
-						<div class="media-body">
-							<div>#speaker</div>
-							<div>
-								<h4 class="media-heading">#topic</h4> 
-								<p>#abstract</p>
-							</div>			    						
-						</div> 
-					</div> 				
-				</li>
-				
-				<li class="ui-state-default" style="background-color:#af23a4;color:white" id="#id">
-					<div class="media"> 
-						<div class="media-left">
-							<img src="https://www.w3schools.com/bootstrap/img_chania.jpg" class="media-object img-circle" style="border-radius:20%;height:30% " >
-						</div> 
-						<div class="media-body">
-							<div>#speaker</div>
-							<div>
-								<h4 class="media-heading">#topic</h4> 
-								<p>#abstract</p>
-							</div>			    						
-						</div> 
-					</div> 				
-				</li>				
-				
-				<li class="ui-state-default" style="background-color:#af23a4;color:white" id="#id">
-					<div class="media"> 
-						<div class="media-left">
-							<img src="https://www.w3schools.com/bootstrap/img_chania.jpg" class="media-object img-circle" style="border-radius:20%;height:30% " >
-						</div> 
-						<div class="media-body">
-							<div>#speaker</div>
-							<div>
-								<h4 class="media-heading">#topic</h4> 
-								<p>#abstract</p>
-							</div>			    						
-						</div> 
-					</div> 				
-				</li>
-				
-			</ul>
-		</div>
-  </div>
-</div>
-
+<body>
+ 
+<ul id="sortable">
+  <li>Item 1</li>
+  <li>Item 2</li>
+  <li>Item 3</li>
+  <li>Item 4</li>
+  <li>Item 5</li>
+</ul>
+ 
+<script>$("#sortable").sortable();</script>
+ 
 </body>
 </html>
