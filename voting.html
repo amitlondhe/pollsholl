@@ -28,20 +28,7 @@
 		li { border-radius:1em; }
 	</style>  
   
-	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
-	<script>
-	  // Initialize Firebase
-	  var config = {
-		apiKey: "AIzaSyC7DqgTW-C7GrjRsGjd-D6jN4k_-h6MTCA",
-		authDomain: "voting-a1fe7.firebaseapp.com",
-		databaseURL: "https://voting-a1fe7.firebaseio.com",
-		projectId: "voting-a1fe7",
-		storageBucket: "",
-		messagingSenderId: "805283765249"
-	  };
-	  firebase.initializeApp(config);
-	</script>  
-  
+ 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -58,16 +45,23 @@
  
   $(document).ready(function() { 
   
-	var entryHtml = '<li class="ui-state-default" style="background-color:#af23a4;color:white" id="#id">' + 
-							'<div>Name  : #speaker</div>' +
-							'<div>' + 
-								'<h4>Topic : #topic</h4>' +
-								'<p>#abstract</p>' + 
-							'</div>' + 		    						
+	var entryHtml = '<li  style="background-color:#af23a4;color:white" id="#id">' + 
+						'<div class="container-fluid">'+
+							'<div class="row">' + 
+							    '<div class="col-sm-4">' + 
+									'<img src="https://www.w3schools.com/bootstrap/img_chania.jpg" style="width:40%;height:30%;border-radius:20%;" >' +
+								'</div>' +
+								'<div class="col-sm-4">#speaker </div>' +
+								'<div class="col-sm-4">#topic </div>' +
+							'</div>' + 
+							'<div class="row">' + 
+								'<div class="col-sm-12">#abstract</div>' +								
+							'</div>' + 							
+						  '</div>' + 
 					'</li>';
   
   
-	readEntries();
+	//readEntries();
 	
 	var userid = "";
 	$('#sortable').sortable({
@@ -91,27 +85,7 @@
 		$("#sortable").show();
 	});
 	
-	function readEntries() {
-		firebase.database().ref('/entries/').once('value').then(function(snapshot) {
-		  /*var lightningTalks = snapshot.val();
-		  console.log(lightningTalks);*/
-		  snapshot.forEach(function(lightningTalk){
-			var key = lightningTalk.key;
-			console.log("Key ***" + key);
-			// childData will be the actual contents of the child
-			var childData = lightningTalk.val();
-			console.log("Val ***" + childData);
-			console.log("name:" + childData.name + ", topic:" + childData.topic + ", desc:"+childData.desc);
 
-			var talkHtml = entryHtml;
-			talkHtml = talkHtml.replace("#id",childData.name);
-			talkHtml = talkHtml.replace("#speaker",childData.name);
-			talkHtml = talkHtml.replace("#topic",childData.topic);
-			talkHtml = talkHtml.replace("#abstract",childData.desc);
-			$('#sortable').append(talkHtml);
-		  });
-		});	
-	}
   });
   </script>
   
@@ -124,32 +98,106 @@
 </div>
   
 <div class="container-fluid bg-2">
-   <div id="signin">
-	<form>
-	  <div id=enterphone">
-		  <div class="form-group row">
-			<div class="col-sm-6">
-				<label for="phonenumber">Phone Number:</label>
-				<input type="phone" class="form-control col-sm-5 " id="phonenumber" size="10" maxlength="10" >
-			</div>
-		  </div>
-		  <button type="button" class="btn btn-primary" id="getcode">
-		  Get Code</button>
-	  </div>
-	  
-	  <div id="entercode" style="display:none">
-		  <div class="form-group row">
-			<div class="col-sm-6">
-				<label for="passcode">Passcode:</label>
-				<input type="text" class="form-control" id="passcode">
-			</div>
-		  </div>
-		  <button type="button" class="btn btn-primary" id="signinbutton">Sign in</button>
-	  </div>
-	</form>
-   </div>
+
     <div class="row">
-	<ul id="sortable" class="list-group col-sm-12" style="margin:1em" >				
+	<ul id="sortable" class="list-group col-sm-12" style="margin:1em" >	
+		<li style="background-color:#af23a4;color:white" id="9000">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-2">
+						<img src="https://www.w3schools.com/bootstrap/img_chania.jpg" style="width:50%;height:50%;border-radius:20%;">
+					</div>
+					<h4 class="col-sm-4">Amit Londhe </h4>
+					<h4 class="col-sm-6">Lightning Talk 1 </h4>
+				</div>
+				<div class="row">
+					<div class="col-sm-2"></div>
+					<div class="col-sm-10 small">This is a sample abstract. \n This is a sample abstract.This is a sample abstract.This is a sample abstract. </div>
+				</div>
+			</div>
+		</li>
+
+		<li style="background-color:#af23a4;color:white" id="9000">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-2">
+						<img src="https://www.w3schools.com/bootstrap/img_chania.jpg" style="width:50%;height:50%;border-radius:20%;">
+					</div>
+					<h4 class="col-sm-4">Amit Londhe </h4>
+					<h4 class="col-sm-6">Lightning Talk 1 </h4>
+				</div>
+				<div class="row">
+					<div class="col-sm-2"></div>
+					<div class="col-sm-10 small">This is a sample abstract. \n This is a sample abstract.This is a sample abstract.This is a sample abstract. </div>
+				</div>
+			</div>
+		</li>
+
+		<li style="background-color:#af23a4;color:white" id="9000">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-2">
+						<img src="https://www.w3schools.com/bootstrap/img_chania.jpg" style="width:50%;height:50%;border-radius:20%;">
+					</div>
+					<h4 class="col-sm-4">Amit Londhe </h4>
+					<h4 class="col-sm-6">Lightning Talk 1 </h4>
+				</div>
+				<div class="row">
+					<div class="col-sm-2"></div>
+					<div class="col-sm-10 small">This is a sample abstract. \n This is a sample abstract.This is a sample abstract.This is a sample abstract. </div>
+				</div>
+			</div>
+		</li>
+
+		<li style="background-color:#af23a4;color:white" id="9000">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-2">
+						<img src="https://www.w3schools.com/bootstrap/img_chania.jpg" style="width:50%;height:50%;border-radius:20%;">
+					</div>
+					<h4 class="col-sm-4">Amit Londhe </h4>
+					<h4 class="col-sm-6">Lightning Talk 1 </h4>
+				</div>
+				<div class="row">
+					<div class="col-sm-2"></div>
+					<div class="col-sm-10 small">This is a sample abstract. \n This is a sample abstract.This is a sample abstract.This is a sample abstract. </div>
+				</div>
+			</div>
+		</li>
+
+		<li style="background-color:#af23a4;color:white" id="9000">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-2">
+						<img src="https://www.w3schools.com/bootstrap/img_chania.jpg" style="width:50%;height:50%;border-radius:20%;">
+					</div>
+					<h4 class="col-sm-4">Amit Londhe </h4>
+					<h4 class="col-sm-6">Lightning Talk 1 </h4>
+				</div>
+				<div class="row">
+					<div class="col-sm-2"></div>
+					<div class="col-sm-10 small">This is a sample abstract. \n This is a sample abstract.This is a sample abstract.This is a sample abstract. </div>
+				</div>
+			</div>
+		</li>
+
+		<li style="background-color:#af23a4;color:white" id="9000">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-2">
+						<img src="https://www.w3schools.com/bootstrap/img_chania.jpg" style="width:50%;height:50%;border-radius:20%;">
+					</div>
+					<h4 class="col-sm-4">Amit Londhe </h4>
+					<h4 class="col-sm-6">Lightning Talk 1 </h4>
+				</div>
+				<div class="row">
+					<div class="col-sm-2"></div>
+					<div class="col-sm-10 small">This is a sample abstract. \n This is a sample abstract.This is a sample abstract.This is a sample abstract. </div>
+				</div>
+			</div>
+		</li>		
+	
+	
 	</ul> 
     </div>	
   
