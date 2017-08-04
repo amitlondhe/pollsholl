@@ -89,7 +89,7 @@
 			// Uncomment later
 			save_new_order();
 		} else {
-			showVotingStoppedMessage();
+			displayMessage("'<h2> Voting has stopped. And Winner is <<winnername>> </h2>'");
 			// Also Show winner 
 		}
 	   }
@@ -166,6 +166,11 @@
 	var appVerifier = window.recaptchaVerifier;	
 	
 	function save_new_order() {
+	    console.log("Logged in User is '" + userphone + "'");
+		if(!userphone) {
+			console.log("User logged out");
+			displayMessage("'<h2> It seems you have been logged out. Please log in again to vote. </h2>'");
+		}
 		console.log("Top Selection " + $('#sortable').children().first().attr('id'));
 		var toptalkid = $('#sortable').children().first().attr('id');
 		// Get a reference to the database service
@@ -196,8 +201,10 @@
 			talkHtml = talkHtml.replace("#speaker",childData.name);
 			talkHtml = talkHtml.replace("#topic",childData.topic);
 			talkHtml = talkHtml.replace("#abstract",childData.desc);
-			$('#sortable').append(talkHtml);
 			
+			// TODO : If logged in earlier and timing still valid, make sure the earlier selection is shown at top.
+			
+			$('#sortable').append(talkHtml);
 		  });
 		  $("#sortable").show();
 		});	
@@ -216,14 +223,13 @@
 			if(moment().isBetween(startTime,endTime) == true) {
 				//readEntries();
 			} else {
-				showVotingStoppedMessage();
+				displayMessage("'<h2> Voting has stopped. </h2>'");
 			}
 		});
 	}
 	
-	function showVotingStoppedMessage() {
-		var html = '<h2> Voting has stopped. </h2>';
-		$("#usermessage").html(html);		
+	function displayMessage(htmlmessage) {
+		$("#usermessage").html(htmlmessage);		
 		$("#usermessage").show();
 		$("#signin").hide();
 	}
