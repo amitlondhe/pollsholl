@@ -130,8 +130,8 @@
 		  userid = user.uid;
 		  userphone = user.phoneNumber;
 		  console.log("Sign in Complete " + userid + " phone -" + userphone);
-		  $("#signin").hide();		  
-		  $("#sortable").show();
+		  readEntries();
+		  $("#signin").hide();	
 		}).catch(function (error) {
 		  console.log("Error signing in " + error);
 		  // User couldn't sign in (bad verification code?)
@@ -197,7 +197,9 @@
 			talkHtml = talkHtml.replace("#topic",childData.topic);
 			talkHtml = talkHtml.replace("#abstract",childData.desc);
 			$('#sortable').append(talkHtml);
+			
 		  });
+		  $("#sortable").show();
 		});	
 	}
 	
@@ -212,7 +214,7 @@
 			console.log("startTime ->" + startTime + ", endTime -> " + endTime);
 			console.log("Between " + moment().isBetween(startTime,endTime));
 			if(moment().isBetween(startTime,endTime) == true) {
-				readEntries();
+				//readEntries();
 			} else {
 				showVotingStoppedMessage();
 			}
