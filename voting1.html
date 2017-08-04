@@ -57,21 +57,18 @@
   <script>
  
   $(document).ready(function() { 
-  
-	var entryHtml = '<li class="ui-state-default" style="background-color:#af23a4;color:white" id="#id">' + 
-					'<div class="media">' +  
-						'<div class="media-left">' + 
-							'<img src="https://www.w3schools.com/bootstrap/img_chania.jpg" class="media-object img-circle" style="border-radius:20%;height:20% " >' +
-						'</div>' + 
-						'<div class="media-body">' +
-							'<div>Name  : #speaker</div>' +
-							'<div>' + 
-								'<h4 class="media-heading">Topic : #topic</h4>' +
-								'<p>#abstract</p>' + 
-							'</div>' + 		    						
-						'</div>' + 
-					'</div>' +				
-				'</li>';
+				
+	var entryHtml = '<li style="background-color:#af23a4;color:white;border:1px solid white;padding-top:5px;padding-bottom:2px;padding-left:2px;padding-right:2px" id="#id" >' + 
+			'<div class="container-fluid" style="padding:0;margin:0 10 0 10">' +
+				'<div class="row" >' + 
+					'<div class="col-sm-2" style="text-align:center" >' + 
+						'<img src="https://www.w3schools.com/bootstrap/img_chania.jpg" style="width:50%;height:60%;border-radius:20%;">' +
+						'<p style="font-size:0.7em">#speaker</p>'+
+					'</div>' + 
+					'<p class="col-sm-10 small text-justify"> #topic <br/> <i> #abstract </i> </p>'
+				'</div>' +
+			'</div>' + 
+		'</li>';				
   
   
 	readEntries();
