@@ -131,6 +131,7 @@
 		  userphone = user.phoneNumber;
 		  console.log("Sign in Complete " + userid + " phone -" + userphone);
 		  $("#signin").hide();		  
+		  $("#sortable").show();
 		}).catch(function (error) {
 		  console.log("Error signing in " + error);
 		  // User couldn't sign in (bad verification code?)
