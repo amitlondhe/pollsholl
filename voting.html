@@ -27,9 +27,23 @@
 		
 		li { border-radius:1em; }
 	</style>  
-  
- 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  
+  	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyC7DqgTW-C7GrjRsGjd-D6jN4k_-h6MTCA",
+		authDomain: "voting-a1fe7.firebaseapp.com",
+		databaseURL: "https://voting-a1fe7.firebaseio.com",
+		projectId: "voting-a1fe7",
+		storageBucket: "",
+		messagingSenderId: "805283765249"
+	  };
+	  firebase.initializeApp(config);
+	</script> 
+  
+  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   
@@ -37,14 +51,22 @@
   <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
    -->
    
-  <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="js/jquery.ui.touch-punch.min.js"></script>
-
+ <script src="js/moment.js"></script>
+ 
   <script>
  
   $(document).ready(function() { 
   
+    console.log("now " + moment.now());
+	var current = moment.now();
+	var start = moment('4 Aug 2017 10:00:00 EST');
+	var end = moment('4 Aug 2017 12:00:00 EST');
+	console.log("start " + start + ", end " + end);
+	console.log("Between " + moment().isBetween(start,end));
+  
+  /*
 	var entryHtml = '<li  style="background-color:#af23a4;color:white" id="#id">' + 
 						'<div class="container-fluid">'+
 							'<div class="row">' + 
@@ -84,7 +106,7 @@
 		$("#signin").hide();
 		$("#sortable").show();
 	});
-	
+	*/
 
   });
   </script>

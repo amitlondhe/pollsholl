@@ -48,15 +48,19 @@
   
   <!--
   <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
    -->
    
-  <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="js/jquery.ui.touch-punch.min.js"></script>
+  <script src="js/moment.js"></script>
 
   <script>
+  moment().format();
+  $(document).ready(function() {
  
-  $(document).ready(function() { 
+	var startTime,endTime;
 				
 	var entryHtml = '<li style="background-color:#af23a4;color:white;border:1px solid white;padding-top:5px;padding-bottom:2px;padding-left:2px;padding-right:2px" id="#id" >' + 
 			'<div class="container-fluid" style="padding:0;margin:0 10 0 10">' +
@@ -70,16 +74,25 @@
 			'</div>' + 
 		'</li>';				
   
-  
-	readEntries();
-	
+    getStartEndTimes();
+		
 	var userid = "";
+	
 	$('#sortable').sortable({
 	   scroll: true, 
 	   scrollSensitivity: 100 ,
-	   scrollSpeed: 50,
+	   scrollSpeed: 20,
 	   placeholder: "ui-state-highlight",
-		//update: function () { save_new_order() }
+	   update: function () { 
+		if(moment().isBetween(startTime,endTime) == true) {
+			alert("Now saving");
+			// Uncomment later
+			save_new_order();
+		} else {
+			showVotingStoppedMessage();
+			// Also Show winner 
+		}
+	   }
 	});
 
     $("#sortable" ).disableSelection();
@@ -90,12 +103,13 @@
 		$("#entercode").show();
 		$("#getcode").prop( "disabled", true );
 	});
+	
 	$("#signinbutton").click(function(){
 		$("#signin").hide();
 		$("#sortable").show();
 	});
 	
-	/*
+	
 	$("#getcode").click(function(){
 		alert("get Code");
 		var phoneNumber = $("#phonenumber").val();
@@ -124,7 +138,7 @@
 		  $("#signinbutton").prop( "disabled", false);
 		});	
 	});
-	*/
+	
 	
 	function onSignInSubmit(phoneNumber) {
 		firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
@@ -148,29 +162,16 @@
 	var appVerifier = window.recaptchaVerifier;	
 	
 	function save_new_order() {
-		var a = [];
-		
-		alert("Top Selection " + $('#sortable').children().first().attr('id'));
-		
 		console.log("Top Selection " + $('#sortable').children().first().attr('id'));
 		var toptalkid = $('#sortable').children().first().attr('id');
 		// Get a reference to the database service
 		var database = firebase.database();
-		writeUserData(1,toptalkid);
+		// Figure out the userid
+		writeUserData(userid,toptalkid);
 	}
 	
-	
-	/*
-	Default security rule
-	{
-		"rules": {
-			".read": "auth != null",
-			".write": "auth != null"
-		}
-	}
-	*/
-	function writeUserData(userId, talkid) {
-		firebase.database().ref('users/' + userId).set({
+	function writeUserData(userid, talkid) {
+		firebase.database().ref('users/' + userid).set({
 			toptalk: talkid
 		});
 	}
@@ -184,7 +185,6 @@
 			console.log("Key ***" + key);
 			// childData will be the actual contents of the child
 			var childData = lightningTalk.val();
-			console.log("Val ***" + childData);
 			console.log("name:" + childData.name + ", topic:" + childData.topic + ", desc:"+childData.desc);
 
 			var talkHtml = entryHtml;
@@ -195,6 +195,31 @@
 			$('#sortable').append(talkHtml);
 		  });
 		});	
+	}
+	
+	function getStartEndTimes() {
+		firebase.database().ref('time').once('value').then(function(s){
+		    var start  = s.val().start;
+			var end = s.val().end;
+			startTime = moment(start);
+			endTime = moment(end);
+			//var start = moment('4 Aug 2017 10:00:00 EST');
+			//var end = moment('4 Aug 2017 :00:00 EST');
+			console.log("startTime ->" + startTime + ", endTime -> " + endTime);
+			console.log("Between " + moment().isBetween(startTime,endTime));
+			if(moment().isBetween(startTime,endTime) == true) {
+				readEntries();
+			} else {
+				showVotingStoppedMessage();
+			}
+		});
+	}
+	
+	function showVotingStoppedMessage() {
+		var html = '<h2> Voting has stopped. </h2>';
+		$("#usermessage").html(html);		
+		$("#usermessage").show();
+		$("#signin").hide();
 	}
   });
   </script>
@@ -213,7 +238,7 @@
 	  <div id=enterphone">
 		  <div class="form-group row">
 			<div class="col-sm-6">
-				<label for="phonenumber">Phone Number:</label>
+				<label for="phonenumber">Phone Number (XXX-XXX-XXXX) *:</label>
 				<input type="phone" class="form-control col-sm-5 " id="phonenumber" size="10" maxlength="10" >
 			</div>
 		  </div>
@@ -232,10 +257,15 @@
 	  </div>
 	</form>
    </div>
-    <div class="row">
-	<ul id="sortable" class="list-group col-sm-12" style="margin:1em" >				
-	</ul> 
+    <div class="row" id="content">
+		<ul id="sortable" class="list-group col-sm-12" style="margin:1em" >				
+		</ul> 
     </div>	
+
+	<div id="usermessage" class="jumbotron alert alert-danger"" style="display:none;margin-top:1em">  
+		
+   </div>	
+	
   
 </div>
 
