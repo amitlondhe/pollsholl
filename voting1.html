@@ -89,7 +89,9 @@
 			// Uncomment later
 			save_new_order();
 		} else {
-			displayMessage("'<h2> Voting has stopped. And Winner is <<winnername>> </h2>'");
+		    getWinner();
+			$("#sortable").hide();
+			displayMessage("<h2> Voting has stopped. And Winner is <<winnername>> </h2>");
 			// Also Show winner 
 		}
 	   }
@@ -134,8 +136,6 @@
 		  $("#signin").hide();	
 		}).catch(function (error) {
 		  console.log("Error signing in " + error);
-		  // User couldn't sign in (bad verification code?)
-		  // ...
 		  $("#signin").show();
 		  $("#entercode").hide();
 		  $("#getcode").prop( "disabled", false );
@@ -210,6 +210,44 @@
 		});	
 	}
 	
+	function getWinner() {
+		console.log("Getting winner information");
+		var myMap = new Map();
+		var topVal = -1;
+		// If we have multiple winners then map would be better
+		var results = new Map();;
+
+		firebase.database().ref('/users/').once('value').then(function(snapshot) {
+			snapshot.forEach(function(userselection){
+				var username = userselection.key;
+				var toplightningtalk = userselection.val();
+				console.log("username ->" + username + ",toplightningtalk->"+toplightningtalk);
+				
+				if(myMap.has(toplightningtalk)) {
+					myMap.set(toplightningtalk,myMap.get(toplightningtalk)+1);
+				} else {
+					myMap.set(toplightningtalk,1);
+				}
+			});
+			
+			
+			// Find out the top Lightning talk
+			myMap.forEach(function(val,key,map){
+				if(val >= topVal) {
+				 results.set(key,val);
+				}		
+			});
+			
+			var html = "";
+			for(let entry of results.entries()) {
+				console.log("Winner '" + entry[0] + "' and votes -" + entry[1]);
+			    html = html + "Winning lightning talk is '" + entry[0] + "' and has received -" + entry[1] + " votes </br>";
+			}
+			// Create a Banner of Winner and hide the lightning talk list
+			displayMessage(html);
+		});
+	}
+	
 	function getStartEndTimes() {
 		firebase.database().ref('time').once('value').then(function(s){
 		    var start  = s.val().start;
@@ -223,7 +261,7 @@
 			if(moment().isBetween(startTime,endTime) == true) {
 				//readEntries();
 			} else {
-				displayMessage("'<h2> Voting has stopped. </h2>'");
+				displayMessage("<h2> Voting has stopped. </h2>");
 			}
 		});
 	}
