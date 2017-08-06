@@ -114,9 +114,33 @@
 	});
 	*/
 	
+	$("#phonenumber").change(function(){
+		var phonenumber = $("#phonenumber").val();
+		if(phonenumber.length == 0) {
+			return;
+		}
+		if(phonenumber.length == 10) {
+			phonenumber = phonenumber.slice(0,3) + "-" + phonenumber.slice(3,6) + "-" + phonenumber.slice(6);
+			$("#phonenumber").val(phonenumber);
+		}
+	});
+	
 	
 	$("#getcode").click(function(){
 		var phoneNumber = $("#phonenumber").val();
+		
+		if(phoneNumber.length == 0 ) {
+			alert("Please enter the phone number to request the code");
+			return;
+		} else {
+			// remove "-" if present and check length
+			phoneNumber = phoneNumber.replace(/-/g,'');
+			if(phoneNumber.length != 10) {
+				alert("Phone number is invalid");
+				return;
+			}
+		}
+		// Google needs number in the format +1XXXXXXXXXX so add +1
 		phoneNumber = "+1"+phoneNumber;
 		console.log("Signing you in with "  + phoneNumber);
 		onSignInSubmit(phoneNumber);		
@@ -289,7 +313,7 @@
 		  <div class="form-group row">
 			<div class="col-sm-6">
 				<label for="phonenumber">Phone Number (XXX-XXX-XXXX) *:</label>
-				<input type="phone" class="form-control col-sm-5 " id="phonenumber" size="10" maxlength="10" >
+				<input type="phone" class="form-control col-sm-5 " id="phonenumber" size="12" maxlength="12" >
 			</div>
 		  </div>
 		  <button type="button" class="btn btn-primary" id="getcode">
