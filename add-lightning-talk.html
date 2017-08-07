@@ -96,8 +96,7 @@
 		}
 	});
 
-	function save_new_lightning_talk(speakername,topic,abstractdesc) {		
-		
+	function save_new_lightning_talk(speakername,topic,abstractdesc) {	
 		// Get a reference to the database service
 		var database = firebase.database();
 		firebase.database().ref('entries/' + speakername).set({
