@@ -241,7 +241,7 @@
 			console.log("name:" + childData.name + ", topic:" + childData.topic + ", desc:"+childData.desc);
 
 			var talkHtml = entryHtml;
-			talkHtml = talkHtml.replace("#id",childData.name);
+			talkHtml = talkHtml.replace("#id",childData.name + "~" + childData.topic);
 			talkHtml = talkHtml.replace("#speaker",childData.name);
 			talkHtml = talkHtml.replace("#topic",childData.topic);
 			talkHtml = talkHtml.replace("#abstract",childData.desc);
@@ -304,14 +304,17 @@
 		displayMessage(html);		
 	});
 	
-	function getStartEndTimes() {
+	// Substract 1 hour from actual start and end times while entering values in database. DST not handled
+	// Example : 9 AM in Database is read as 10 AM in Browser.
+	function getStartEndTimes() { 
 		firebase.database().ref('time').once('value').then(function(s){
 		    var start  = s.val().start;
 			var end = s.val().end;
+			console.log("DB:start ->" + start + ", DB:end -> " + end);
 			startTime = moment(start);
 			endTime = moment(end);
-			//var start = moment('4 Aug 2017 10:00:00 EST');
-			//var end = moment('4 Aug 2017 :00:00 EST');
+			console.log("moment:start:" + startTime.format('MMMM Do YYYY, h:mm:ss a'));
+			console.log("moment:end:" + endTime.format('MMMM Do YYYY, h:mm:ss a'));
 			console.log("startTime ->" + startTime + ", endTime -> " + endTime);
 			console.log("Between " + moment().isBetween(startTime,endTime));
 			if(moment().isBetween(startTime,endTime) == true) {
