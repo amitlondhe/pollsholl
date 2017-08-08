@@ -59,7 +59,7 @@
   <script>
   moment().format();
   $(document).ready(function() {
-
+  
 	$("#validationmsgs").empty();
 	$("#validationmsgsdiv").hide();
 
@@ -230,12 +230,15 @@
 	}
 	
 	function readEntries() {
-		// Find if user already has a vote
-		firebase.database().ref('/users/'+userphone).once('value').then(function(snapshot){
+		var userselection = "";
+		firebase.database().ref('users/'+userphone).once('value').then(function(snapshot){
+			console.log(snapshot.numChildren());
 			snapshot.forEach(function(uservote){
-				console.log("User have voted -> " + uservote.val().toptalk);
+				userselection = uservote.val();
+				console.log("User have voted -> " + userselection );
 			});
 		});
+	
 	
 		firebase.database().ref('/entries/').once('value').then(function(snapshot) {
 		  /*var lightningTalks = snapshot.val();
