@@ -65,14 +65,16 @@
 
 	var startTime,endTime;
 				
-	var entryHtml = '<li style="background-color:#af23a4;color:white;border:1px solid white;padding-top:5px;padding-bottom:2px;padding-left:2px;padding-right:2px" id="#id" >' + 
+	var entryHtml = '<li style="background-color:#af23a4;color:white;border:1px solid purple;padding-top:5px;padding-bottom:2px;padding-left:2px;padding-right:2px" id="#id" >' + 
 			'<div class="container-fluid" style="padding:0;margin:0 10 0 10">' +
 				'<div class="row" >' + 
-					'<div class="col-sm-2" style="text-align:center" >' + 
-						'<img src="#imagesource" style="width:50%;height:60%;border-radius:20%;">' +
-						'<p style="font-size:0.7em">#speaker</p>'+
+					'<div class="col-sm-4" style="text-align:center" >' + 
+						'<img src="#imagesource" style="width:20%;border-radius:20%;">' +
+						//'<p style="font-size:0.7em">#speaker</p>'+
 					'</div>' + 
-					'<p class="col-sm-10 small text-justify"> #topic <br/> <i> #abstract </i> </p>'
+					'<div class="col-sm-4">' + 
+						'<p class="text-center"> #topic <br/> <!-- <i> #abstract </i> </p> -->' +
+					'</div>' + 
 				'</div>' +
 			'</div>' + 
 		'</li>';				
@@ -231,7 +233,9 @@
 	
 	function readEntries() {
 		var userselection = "";
-		firebase.database().ref('users/'+userphone).once('value').then(function(snapshot){
+		console.log("retrieving existing vote for " + userphone);
+		//firebase.database().ref('users/'+userphone).once('value').then(function(snapshot){
+		firebase.database().ref('users/userid/').once('value').then(function(snapshot){
 			console.log(snapshot.numChildren());
 			snapshot.forEach(function(uservote){
 				userselection = uservote.val();
@@ -241,26 +245,33 @@
 	
 	
 		firebase.database().ref('/entries/').once('value').then(function(snapshot) {
-		  /*var lightningTalks = snapshot.val();
-		  console.log(lightningTalks);*/
+		  var firstItemHtml = "";
 		  snapshot.forEach(function(lightningTalk){
 			var key = lightningTalk.key;
-			console.log("Key ***" + key);
+			//console.log("Key ***" + key);
 			// childData will be the actual contents of the child
 			var childData = lightningTalk.val();
 			console.log("name:" + childData.name + ", topic:" + childData.topic + ", desc:"+childData.desc);
+
 
 			var talkHtml = entryHtml;
 			talkHtml = talkHtml.replace("#id",childData.name + "~" + childData.topic);
 			talkHtml = talkHtml.replace("#speaker",childData.name);
 			talkHtml = talkHtml.replace("#topic",childData.topic);
 			talkHtml = talkHtml.replace("#abstract",childData.desc);
-			talkHtml = talkHtml.replace("#imagesource",'images/'+childData.name.toLowerCase());
+			var imagesource = childData.name.replace(' ','');
+			imagesource = 'images/' + imagesource.toLowerCase() +'.png';
+			talkHtml = talkHtml.replace("#imagesource",imagesource);
 			
-			// TODO : If logged in earlier and timing still valid, make sure the earlier selection is shown at top.
-			
-			$('#sortable').append(talkHtml);
+			// Done: If logged in earlier and timing still valid, make sure the earlier selection is shown at top.			
+			if(userselection == childData.topic.toLowerCase()) {
+				console.log("This is existing user selection and should be moved to top");
+				firstItemHtml = talkHtml;
+			} else{
+				$('#sortable').append(talkHtml);
+			}
 		  });
+		  $('#sortable li:first').parent().prepend(firstItemHtml);
 		  $("#sortable").show();
 		});	
 	}
@@ -329,7 +340,7 @@
 			console.log("startTime ->" + startTime + ", endTime -> " + endTime);
 			console.log("Between " + moment().isBetween(startTime,endTime));
 			if(moment().isBetween(startTime,endTime) == true) {
-				readEntries(); // Mock behavior
+				//readEntries(); // Mock behavior
 			} else {
 			    $("#usermessage").toggleClass("alert alert-info");				
 				displayMessage("<h2> Voting has stopped now.</h2>");
@@ -387,8 +398,14 @@
 	</form>
    </div>
     <div class="row" id="content">
-		<ul id="sortable" class="list-group col-sm-12" style="margin:1em" >				
-		</ul> 
+	    <div class="col-sm-3">
+		</div>
+		<div class="col-sm-6">
+			<ul id="sortable" class="list-group" style="margin:1em" >				
+			</ul> 
+		</div>
+		<div class="col-sm-3">
+		</div>
     </div>	
 
 	<div id="usermessage" class="jumbotron" style="display:none;margin-top:1em">  
