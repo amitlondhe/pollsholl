@@ -253,8 +253,8 @@
 			var childData = lightningTalk.val();
 			console.log("name:" + childData.name + ", topic:" + childData.topic + ", desc:"+childData.desc);
 
-
 			var talkHtml = entryHtml;
+			// id = "speakername~topic"
 			talkHtml = talkHtml.replace("#id",childData.name + "~" + childData.topic);
 			talkHtml = talkHtml.replace("#speaker",childData.name);
 			talkHtml = talkHtml.replace("#topic",childData.topic);
@@ -264,7 +264,9 @@
 			talkHtml = talkHtml.replace("#imagesource",imagesource);
 			
 			// Done: If logged in earlier and timing still valid, make sure the earlier selection is shown at top.			
-			if(userselection == childData.topic.toLowerCase()) {
+			// Generate the id from name and topic
+			var currentid = childData.name.toLowerCase()+"~" + childData.topic.toLowerCase();
+			if(userselection.toLowerCase() == currentid) {
 				console.log("This is existing user selection and should be moved to top");
 				firstItemHtml = talkHtml;
 			} else{
