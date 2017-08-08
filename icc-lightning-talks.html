@@ -230,6 +230,13 @@
 	}
 	
 	function readEntries() {
+		// Find if user already has a vote
+		firebase.database().ref('/users/'+userphone).once('value').then(function(snapshot){
+			snapshot.forEach(function(uservote){
+				console.log("User have voted -> " + uservote.val().toptalk);
+			});
+		});
+	
 		firebase.database().ref('/entries/').once('value').then(function(snapshot) {
 		  /*var lightningTalks = snapshot.val();
 		  console.log(lightningTalks);*/
