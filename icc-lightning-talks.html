@@ -69,7 +69,7 @@
 			'<div class="container-fluid" style="padding:0;margin:0 10 0 10">' +
 				'<div class="row" >' + 
 					'<div class="col-sm-2" style="text-align:center" >' + 
-						'<img src="https://www.w3schools.com/bootstrap/img_chania.jpg" style="width:50%;height:60%;border-radius:20%;">' +
+						'<img src="#imagesource" style="width:50%;height:60%;border-radius:20%;">' +
 						'<p style="font-size:0.7em">#speaker</p>'+
 					'</div>' + 
 					'<p class="col-sm-10 small text-justify"> #topic <br/> <i> #abstract </i> </p>'
@@ -255,6 +255,7 @@
 			talkHtml = talkHtml.replace("#speaker",childData.name);
 			talkHtml = talkHtml.replace("#topic",childData.topic);
 			talkHtml = talkHtml.replace("#abstract",childData.desc);
+			talkHtml = talkHtml.replace("#imagesource",'images/'+childData.name.toLowerCase());
 			
 			// TODO : If logged in earlier and timing still valid, make sure the earlier selection is shown at top.
 			
@@ -328,7 +329,7 @@
 			console.log("startTime ->" + startTime + ", endTime -> " + endTime);
 			console.log("Between " + moment().isBetween(startTime,endTime));
 			if(moment().isBetween(startTime,endTime) == true) {
-				//readEntries(); // Mock behavior
+				readEntries(); // Mock behavior
 			} else {
 			    $("#usermessage").toggleClass("alert alert-info");				
 				displayMessage("<h2> Voting has stopped now.</h2>");
