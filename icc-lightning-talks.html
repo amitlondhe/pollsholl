@@ -463,29 +463,52 @@
 		</ul> 
 	</div>
 
-   <div id="signin" style="margin-top:1em">
-	<form>
-	  <div id=enterphone">
-		  <div class="form-group row">
-			<div class="col-sm-6">
-				<label for="phonenumber">Phone Number (XXX-XXX-XXXX) *:</label>
-				<input type="phone" class="form-control col-sm-5 " id="phonenumber" size="12" maxlength="12" >
-			</div>
+   <div class="row" id="signin" style="margin-top:1em">
+   
+   <div class="col-sm-4"></div>
+	
+	<div class="col-sm-4">
+		
+		<form>
+		  <div id=enterphone" >
+			  <div class="form-group">
+				  <!--
+					<div class="col-sm-6">
+						<label for="phonenumber">Phone Number (XXX-XXX-XXXX) *:</label>				
+						<input type="phone" class="form-control col-sm-5 " id="phonenumber" size="12" maxlength="12" >
+					</div>
+				  </div>
+				  -->
+				  <div class="input-group" >						
+						<span class="input-group-addon"><i class="fa fa-phone fa-fw"></i></span>				
+						<input type="phone" class="form-control" id="phonenumber" size="12" maxlength="12" placeholder="Mobile Number" >					
+				  </div>			  
+			  </div>
+			  <button type="button" class="btn btn-primary" id="getcode">Request One Time Passcode</button>		  
+			  
+			  
 		  </div>
-		  <button type="button" class="btn btn-primary" id="getcode">
-		  Get Code</button>
-	  </div>
-	  
-	  <div id="entercode" style="display:none">
-		  <div class="form-group row">
-			<div class="col-sm-6">
-				<label for="passcode">Passcode:</label>
-				<input type="text" class="form-control" id="passcode">
-			</div>
+		  
+		  <div id="entercode">
+			  <div class="form-group">
+				<!-- <div class="col-sm-6">
+					<label for="passcode">Passcode:</label>
+					<input type="text" class="form-control" id="passcode">
+				</div> -->
+				  <div class="input-group" style="padding-top:1em">						
+						<span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>				
+						<input type="phone" class="form-control" id="passcode" placeholder="Passcode" >					
+				  </div>				
+				
+			  </div>
+			  <button type="button" class="btn btn-primary" id="signinbutton">Sign in</button>
 		  </div>
-		  <button type="button" class="btn btn-primary" id="signinbutton">Sign in</button>
-	  </div>
-	</form>
+		</form>
+		
+	</div>
+	
+	<div class="col-sm-4"></div>
+	
    </div>
    
     <div class="row" id="content">
