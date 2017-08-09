@@ -37,7 +37,9 @@
 		   to {background-color: #da8cd4;}
 		}		
 		
-	</style>  
+	</style> 
+    <link type="text/css" rel="stylesheet" href="css/font-awesome.css">
+
   
 	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
 	<script>
@@ -66,10 +68,19 @@
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="js/jquery.ui.touch-punch.min.js"></script>
   <script src="js/moment.js"></script>
+  
+  <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay_progress.min.js"></script>
+  
+
 
   <script>
   moment().format();
   $(document).ready(function() {
+  
+   $.LoadingOverlaySetup({
+		color           : "rgba(0, 0, 0, 0.4)",
+	});
   
 	$("#validationmsgs").empty();
 	$("#validationmsgsdiv").hide();
@@ -101,8 +112,11 @@
 	   scrollSpeed: 20,
 	   placeholder: "ui-state-highlight",
 	   update: function () { 
-		if(moment().isBetween(startTime,endTime) == true) {
-			alert("Now saving");
+		if(moment().isBetween(startTime,endTime) == true) {			
+			 $.LoadingOverlay("show", {
+				image       : "",
+				fontawesome : "fa fa-cog fa-spin"
+			});
 			// Uncomment later
 			save_new_order();
 		} else {
@@ -145,9 +159,11 @@
 	
 	
 	$("#getcode").click(function(){
+
 	    // reset validations 
 		$("#validationmsgs").empty();
 		$("#validationmsgsdiv").hide();
+		
 		
 		var phoneNumber = $("#phonenumber").val();
 		
@@ -167,10 +183,20 @@
 		// Google needs number in the format +1XXXXXXXXXX so add +1
 		phoneNumber = "+1"+phoneNumber;
 		console.log("Signing you in with "  + phoneNumber);
+		 $.LoadingOverlay("show", {
+			image       : "",
+			fontawesome : "fa fa-cog fa-spin"
+		});			
 		onSignInSubmit(phoneNumber);		
 	});
 	
 	$("#signinbutton").click(function(){
+
+		 $.LoadingOverlay("show", {
+			image       : "",
+			fontawesome : "fa fa-cog fa-spin"
+		});		
+	
 		$("#signinbutton").prop( "disabled", true);
 		
 	    // reset validations 
@@ -195,6 +221,7 @@
 		  $("#signinbutton").prop( "disabled", false);
 		  $("#validationmsgs").append("<li> Error while signing in : " + error + " </li>");
 		  $("#validationmsgsdiv").show();
+		  $.LoadingOverlay("hide");
 		});	
 	});
 	
@@ -208,11 +235,13 @@
 			  //alert("You should receive the code shortly.");
 			  $("#entercode").show();
 			  $("#getcode").prop( "disabled", true );
+			  $.LoadingOverlay("hide");
 			}).catch(function (error) {
 			  // Error; SMS not sent
 			  console.log(error.message);
 			  $("#validationmsgs").append("<li> Error while requesting code : " + error + " </li>");
 			  $("#validationmsgsdiv").show();
+			  $.LoadingOverlay("hide");
 		});	
 	}
 	
@@ -248,9 +277,15 @@
 			console.log('Synchronization succeeded');
 			$('#sortable .blink_me').toggleClass('blink_me');
 			$('#sortable').children().first().toggleClass('blink_me');
+			setTimeout(function(){
+				$.LoadingOverlay("hide");
+			}, 3000);			
 		}).catch(function(error) {
 		    $('#sortable li:first').parent().prepend($('#sortable .blink_me'));
-			console.log('Synchronization failed');
+			console.log('Synchronization failed');			
+			setTimeout(function(){
+				$.LoadingOverlay("hide");
+			}, 3000);	
 	    });
 	}
 	
@@ -299,6 +334,7 @@
 		  $('#sortable li:first').parent().prepend(firstItemHtml);
 		  $('#sortable li:first').toggleClass('blink_me');
 		  $("#sortable").show();
+		  $.LoadingOverlay("hide");
 		});	
 	}
 	
