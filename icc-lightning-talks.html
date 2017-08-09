@@ -257,8 +257,8 @@
 	function readEntries() {
 		var userselection = "";
 		console.log("retrieving existing vote for " + userphone);
-		//firebase.database().ref('users/'+userphone).once('value').then(function(snapshot){
-		firebase.database().ref('users/userid/').once('value').then(function(snapshot){
+		firebase.database().ref('users/'+userphone).once('value').then(function(snapshot){
+		//firebase.database().ref('users/userid/').once('value').then(function(snapshot){
 			console.log(snapshot.numChildren());
 			snapshot.forEach(function(uservote){
 				userselection = uservote.val();
@@ -394,7 +394,7 @@
 			console.log("startTime ->" + startTime + ", endTime -> " + endTime);
 			console.log("Between " + moment().isBetween(startTime,endTime));
 			if(moment().isBetween(startTime,endTime) == true) {
-				readEntries(); // Mock behavior
+				//readEntries(); // Mock behavior
 			} else {
 				getWinner();
 			    $("#usermessage").toggleClass("alert alert-info");				
