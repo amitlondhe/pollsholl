@@ -26,6 +26,17 @@
 		}
 		
 		li { border-radius:1em; }
+		
+		.blink_me {
+		  animation: blinker 3s linear infinite;
+		}
+
+		@keyframes blinker {  
+		  /*50% { opacity: 0; }*/
+		   from {background-color: #af23a4;}
+		   to {background-color: #da8cd4;}
+		}		
+		
 	</style>  
   
 	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
@@ -69,11 +80,11 @@
 			'<div class="container-fluid" style="padding:0;margin:0 10 0 10">' +
 				'<div class="row" >' + 
 					'<div class="col-sm-4" style="text-align:center" >' + 
-						'<img src="#imagesource" style="width:20%;border-radius:20%;">' +
+						'<img src="#imagesource" style="width:40%;border-radius:20%;">' +
 						//'<p style="font-size:0.7em">#speaker</p>'+
 					'</div>' + 
 					'<div class="col-sm-4">' + 
-						'<p class="text-center"> #topic <br/> <!-- <i> #abstract </i> </p> -->' +
+						'<p class="text-center"> #topic </p> <br/>  <!-- <i> #abstract </i>  -->' +
 					'</div>' + 
 				'</div>' +
 			'</div>' + 
@@ -97,10 +108,9 @@
 		} else {
 		    getWinner();
 			$("#sortable").hide();
-			
-			$("#usermessage").toggleClass("alert alert-success");
+			$("#usermessage").toggleClass("alert alert-info");				
 			displayMessage("<h2> Voting has stopped now.</h2>");
-			// Also Show winner 
+			$("#whoiswinner").show();
 		}
 	   }
 	});
@@ -215,10 +225,15 @@
 	    console.log("Logged in User is '" + userphone + "'");
 		if(!userphone) {
 			console.log("User logged out");
-			$("#usermessage").toggleClass("alert alert-danger");
-			displayMessage("'<h2> It seems you have been logged out. Please log in again to vote. </h2>'");
+			$("#usermessage h2").remove();
+			if(!$("#usermessage").hasClass("alert-danger")) {
+				$("#usermessage").addClass("alert-danger");
+			}
+			displayMessage("<h2> It seems you have been logged out. Please log in again to vote. </h2>");
 		}
 		console.log("Top Selection " + $('#sortable').children().first().attr('id'));
+		//$('#sortable .blink_me').toggleClass('blink_me');
+		//$('#sortable').children().first().toggleClass('blink_me');
 		var toptalkid = $('#sortable').children().first().attr('id');
 		// Get a reference to the database service
 		var database = firebase.database();
@@ -229,22 +244,28 @@
 	function writeUserData(userid, talkid) {
 		firebase.database().ref('users/' + userid).set({
 			toptalk: talkid
-		});
+		}).then(function() {
+			console.log('Synchronization succeeded');
+			$('#sortable .blink_me').toggleClass('blink_me');
+			$('#sortable').children().first().toggleClass('blink_me');
+		}).catch(function(error) {
+		    $('#sortable li:first').parent().prepend($('#sortable .blink_me'));
+			console.log('Synchronization failed');
+	    });
 	}
 	
 	function readEntries() {
 		var userselection = "";
 		console.log("retrieving existing vote for " + userphone);
-		firebase.database().ref('users/'+userphone).once('value').then(function(snapshot){
-		//firebase.database().ref('users/userid/').once('value').then(function(snapshot){
+		//firebase.database().ref('users/'+userphone).once('value').then(function(snapshot){
+		firebase.database().ref('users/userid/').once('value').then(function(snapshot){
 			console.log(snapshot.numChildren());
 			snapshot.forEach(function(uservote){
 				userselection = uservote.val();
 				console.log("User have voted -> " + userselection );
 			});
 		});
-	
-	
+		
 		firebase.database().ref('/entries/').once('value').then(function(snapshot) {
 		  var firstItemHtml = "";
 		  snapshot.forEach(function(lightningTalk){
@@ -270,11 +291,13 @@
 			if(userselection.toLowerCase() == currentid) {
 				console.log("This is existing user selection and should be moved to top");
 				firstItemHtml = talkHtml;
-			} else{
+			} else {
 				$('#sortable').append(talkHtml);
 			}
 		  });
+
 		  $('#sortable li:first').parent().prepend(firstItemHtml);
+		  $('#sortable li:first').toggleClass('blink_me');
 		  $("#sortable").show();
 		});	
 	}
@@ -296,7 +319,6 @@
 				} else {
 					myMap.set(toplightningtalk,1);
 				}
-				
 			});
 		});
 	}
@@ -307,22 +329,39 @@
 		var topVal = 0;
 		// If we have multiple winners then map would be better
 		var results = new Map();
+		var resultsArr  = new Array();
 		$("#whoiswinner").hide();
 		// Find out the top Lightning talk
 		myMap.forEach(function(val,key,map){
 		    //TODO Handle the case when more than one winner is available.
 			if(val > topVal) {
-			  topVal = val;
+				topVal = val;
 			  results.clear();
 			  results.set(key,val);
 			}	
 		});
 		
+		myMap.forEach(function(val,key,map){
+			if(val == topVal) {
+				resultsArr.push(key+"|"+val);
+			}
+		});
+		
+		
 		var html = "";
-		for(let entry of results.entries()) {
-			console.log("Winner '" + entry[0] + "' and votes -" + entry[1] + "</h1>");
-			html = html + "<h2> Winning lightning talk is <h1>" + entry[0] + "</h1> and has received -" + entry[1] + " votes </h2> </br>";
-		}
+		/*for(let entry of results.entries()) {
+			var winningentry = entry[0].slice(0,entry[0].indexOf("~"))
+			console.log("Winner '" + winningentry + "' and votes - " + entry[1] + "</h1>");
+			html = html + "<h2> Winning lightning talk is <h1>" + winningentry + "</h1> and has received " + entry[1] + " votes </h2> </br>";
+		}*/
+		
+		resultsArr.forEach(function(element){
+			console.log("array result " + element);
+			var winningentry = element.slice(0,element.indexOf('~'));
+			var votes = element.slice(element.indexOf('|')+1);
+			console.log("Winner '" + winningentry + "' and votes - " + votes + "</h1>");
+			html = html + "<h2> Winning lightning talk is <h1>" + winningentry + "</h1> and has received " + votes + " votes </h2> </br>";
+		});
 		// Create a Banner of Winner and hide the lightning talk list
 		$("#usermessage > h2").empty();
 		$("#usermessage").toggleClass("alert alert-success");
@@ -355,12 +394,12 @@
 			console.log("startTime ->" + startTime + ", endTime -> " + endTime);
 			console.log("Between " + moment().isBetween(startTime,endTime));
 			if(moment().isBetween(startTime,endTime) == true) {
-				//readEntries(); // Mock behavior
+				readEntries(); // Mock behavior
 			} else {
+				getWinner();
 			    $("#usermessage").toggleClass("alert alert-info");				
 				displayMessage("<h2> Voting has stopped now.</h2>");
 				$("#whoiswinner").show();
-				getWinner();
 			}
 		});
 	}
@@ -388,7 +427,7 @@
 		</ul> 
 	</div>
 
-   <div id="signin">
+   <div id="signin" style="margin-top:1em">
 	<form>
 	  <div id=enterphone">
 		  <div class="form-group row">
