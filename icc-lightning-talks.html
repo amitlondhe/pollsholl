@@ -79,6 +79,7 @@
 			'</div>' + 
 		'</li>';				
   
+    getPollTitleAndSubtitle();
     getStartEndTimes();
 		
 	var userid,userphone = "";
@@ -328,6 +329,18 @@
 		displayMessage(html);		
 	});
 	
+	function getPollTitleAndSubtitle() {
+	    firebase.database().ref('title').once('value').then(function(s){
+			console.log("Title is " + s.val());
+			$("#title").text("Vote for " + s.val());
+		});
+		
+		firebase.database().ref('subtitle').once('value').then(function(s){
+			console.log("Title is " + s.val());
+			$("#subtitle").text("{ Move the " + s.val() + " you love to the top }");
+		});
+	}
+	
 	// Substract 1 hour from actual start and end times while entering values in database. DST not handled
 	// Example : 9 AM in Database is read as 10 AM in Browser.
 	function getStartEndTimes() { 
@@ -364,8 +377,8 @@
 <body class="bg-2">
 
 <div class="container-fluid bg-1 text-center ">
-  <h1>Vote for Lightning Talk</h1>
-  <p>{ Move the Talk you love to Top }</p> 
+  <h1 id="title"></h1>
+  <p id="subtitle"></p> 
 </div>
   
 <div class="container-fluid bg-2">
@@ -399,6 +412,7 @@
 	  </div>
 	</form>
    </div>
+   
     <div class="row" id="content">
 	    <div class="col-sm-3">
 		</div>
