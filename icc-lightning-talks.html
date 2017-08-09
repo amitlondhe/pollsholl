@@ -37,16 +37,9 @@
 		   to {background-color: #da8cd4;}
 		}	
 		
-		div#header {		
-			/* Check if background image can be set here */
-			/*background:#2b2b2f !important*/
-			/*background-repeat:no-repeat;*/
-		}
 		
 	</style> 
     <link type="text/css" rel="stylesheet" href="css/font-awesome.css">
-
-  
 	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
 	<script>
 	  // Initialize Firebase
@@ -65,33 +58,25 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   
-  <!--
-  <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-  <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-   -->
-   
-  
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="js/jquery.ui.touch-punch.min.js"></script>
   <script src="js/moment.js"></script>
   
   <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js"></script>
   <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay_progress.min.js"></script>
-  
-
 
   <script>
   moment().format();
   $(document).ready(function() {
   
    $.LoadingOverlaySetup({
-		color           : "rgba(0, 0, 0, 0.4)",
+		color : "rgba(0, 0, 0, 0.4)",
 	});
   
 	$("#validationmsgs").empty();
 	$("#validationmsgsdiv").hide();
 
-	var startTime,endTime;
+	var startTime,endTime,pollFinished,subtitle;
 				
 	var entryHtml = '<li style="background-color:#af23a4;color:white;border:1px solid purple;padding-top:5px;padding-bottom:2px;padding-left:2px;padding-right:2px" id="#id" >' + 
 			'<div class="container-fluid" style="padding:0;margin:0 10 0 10">' +
@@ -111,8 +96,9 @@
 		image       : "",
 		fontawesome : "fa fa-cog fa-spin"
 	});	  
-    getPollTitleAndSubtitle();
+	
     getStartEndTimes();
+    getPollTitleAndSubtitle();
 		
 	var userid,userphone = "";
 	
@@ -379,7 +365,6 @@
 	    });
 	}
 	
-	//TODO Still working on this ????
 	$("#whoiswinner").click(function(){
 	    console.log(myMap);
 		var topVal = 0;
@@ -405,21 +390,17 @@
 		
 		
 		var html = "";
-		/*for(let entry of results.entries()) {
-			var winningentry = entry[0].slice(0,entry[0].indexOf("~"))
-			console.log("Winner '" + winningentry + "' and votes - " + entry[1] + "</h1>");
-			html = html + "<h2> Winning lightning talk is <h1>" + winningentry + "</h1> and has received " + entry[1] + " votes </h2> </br>";
-		}*/
 		
 		resultsArr.forEach(function(element){
 			console.log("array result " + element);
 			var winningentry = element.slice(0,element.indexOf('~'));
 			var votes = element.slice(element.indexOf('|')+1);
 			console.log("Winner '" + winningentry + "' and votes - " + votes + "</h1>");
-			html = html + "<h2> Winning lightning talk is <h1>" + winningentry + "</h1> and has received " + votes + " votes </h2> </br>";
+			html = html + " <h2> <i class='fa fa-trophy fa-3x' aria-hidden='true'> "+ winningentry + "</i> <small><kbd> (" +  votes + " votes) </kbd></small> </h2> <hr/>";
 		});
 		// Create a Banner of Winner and hide the lightning talk list
 		$("#usermessage > h2").empty();
+		$("#usermessage").toggleClass("alert-info");
 		$("#usermessage").toggleClass("alert alert-success");
 		displayMessage(html);		
 	});
@@ -437,7 +418,19 @@
 		
 		firebase.database().ref('subtitle').once('value').then(function(s){
 			console.log("SubTitle is " + s.val());
-			$("#subtitle").text("{ Move the " + s.val() + " you love to the top }");
+			subtitle = s.val();
+			var endTimeFormatted = "";
+			try {
+				endTimeFormatted = moment(endTime).format('MMMM Do YYYY, h:mm:ss a');
+			} catch(error){}
+			if(pollFinished == false) {
+				$("#subtitle").html("{ Move the " + s.val() + " you love to the top until <i class='fa fa-clock-o fa-10 fa-spin' aria-hidden='true'></i> <kbd>"
+				+ endTimeFormatted + " </kbd> <i class='fa fa-clock-o fa-10 fa-spin' aria-hidden='true'></i> }");
+			} else {
+				$("#subtitle").html("{ Poll finished at <i class='fa fa-clock-o fa-10 fa-spin' aria-hidden='true'></i> <kbd>"
+					+ endTime.format('MMMM Do YYYY, h:mm:ss a') + " </kbd> <i class='fa fa-clock-o fa-10 fa-spin' aria-hidden='true'></i> }");		
+			}				
+				
 			$.LoadingOverlay("hide");
 		}).catch(function(error) {		    
 			console.log('could not retrieve the Poll Subtitle ' + error);			
@@ -461,11 +454,13 @@
 			console.log("startTime ->" + startTime + ", endTime -> " + endTime);
 			console.log("Between " + moment().isBetween(startTime,endTime));
 			if(moment().isBetween(startTime,endTime) == true) {
+				pollFinished = false;
 				//readEntries(); // Mock behavior
 			} else {
+				pollFinished = true;
 				getWinner();
 			    $("#usermessage").toggleClass("alert alert-info");				
-				displayMessage("<h2> Voting has stopped now.</h2>");
+				displayMessage("");
 				$("#whoiswinner").show();
 			}
 		}).catch(function(error) {		    
@@ -487,14 +482,22 @@
 </head>
 <body class="bg-2">
 
-<div id="header" class="container-fluid bg-1 text-center" >
-  <h1 id="title"></h1>
-  <p id="subtitle"></p> 
+<div id="header" class="container-fluid bg-1 text-center row">
+	<div class="col-sm-3">
+		<img src="images/Vote-PNG-Image.png" style="width:40%;border-radius:20%;float:left">
+	</div>
+	<div class="col-sm-6">
+		<h1 id="title"></h1>
+		<p id="subtitle"></p> 
+	</div>
+	<div class="col-sm-3">
+		<img src="images/Vote-PNG-Image.png" style="width:40%;border-radius:20%;float:right">
+	</div>
 </div>
   
 <div class="container-fluid bg-2">
 
-	<div  id="validationmsgsdiv" class="alert alert-danger" style="display:none" >
+	<div  id="validationmsgsdiv" class="alert alert-danger" style="display:none;margin-top:1em" >
 		<ul id="validationmsgs" style="list-style-type:disc">
 		</ul> 
 	</div>
@@ -558,8 +561,17 @@
 		</div>
     </div>	
 
-	<div id="usermessage" class="jumbotron" style="display:none;margin-top:1em">  
-		<button type="button" class="btn btn-primary btn-lg" id="whoiswinner" style="display:none"> Who's the Winner? </button>
+	<div id="usermessage" class="jumbotron" style="display:none;margin-top:1em"> 
+		<div class="row">
+			<div class="col-sm-4"></div>
+			<div class="col-sm-8">
+				<button type="button" class="btn btn-primary btn-lg text-center" id="whoiswinner" style="display:none"> 
+					<i class="fa fa-trophy fa-5x" aria-hidden="true"></i>
+					Check out the winner 
+				</button>
+			</div>
+			<div class="col-sm-4"></div>
+		</div>
    </div>	
 	
   
