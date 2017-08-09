@@ -101,6 +101,10 @@
 			'</div>' + 
 		'</li>';				
   
+	 $.LoadingOverlay("show", {
+		image       : "",
+		fontawesome : "fa fa-cog fa-spin"
+	});	  
     getPollTitleAndSubtitle();
     getStartEndTimes();
 		
@@ -279,13 +283,13 @@
 			$('#sortable').children().first().toggleClass('blink_me');
 			setTimeout(function(){
 				$.LoadingOverlay("hide");
-			}, 3000);			
+			}, 2000);			
 		}).catch(function(error) {
 		    $('#sortable li:first').parent().prepend($('#sortable .blink_me'));
 			console.log('Synchronization failed');			
 			setTimeout(function(){
 				$.LoadingOverlay("hide");
-			}, 3000);	
+			}, 2000);	
 	    });
 	}
 	
@@ -335,7 +339,12 @@
 		  $('#sortable li:first').toggleClass('blink_me');
 		  $("#sortable").show();
 		  $.LoadingOverlay("hide");
-		});	
+		}).catch(function(error) {		    
+			console.log('Could not retrieve entries' + error);			
+			setTimeout(function(){
+				$.LoadingOverlay("hide");
+			}, 2000);	
+	    });;	
 	}
 	
 	var myMap = new Map();
@@ -356,7 +365,12 @@
 					myMap.set(toplightningtalk,1);
 				}
 			});
-		});
+		}).catch(function(error) {		   
+			console.log('Could not retrieve the winner '+ error);			
+			setTimeout(function(){
+				$.LoadingOverlay("hide");
+			}, 2000);	
+	    });
 	}
 	
 	//TODO Still working on this ????
@@ -408,12 +422,23 @@
 	    firebase.database().ref('title').once('value').then(function(s){
 			console.log("Title is " + s.val());
 			$("#title").text("Vote for " + s.val());
-		});
+		}).catch(function(error) {
+			console.log('could not retrieve the Poll title ' + error);			
+			setTimeout(function(){
+				$.LoadingOverlay("hide");
+			}, 2000);	
+	    });
 		
 		firebase.database().ref('subtitle').once('value').then(function(s){
-			console.log("Title is " + s.val());
+			console.log("SubTitle is " + s.val());
 			$("#subtitle").text("{ Move the " + s.val() + " you love to the top }");
-		});
+			$.LoadingOverlay("hide");
+		}).catch(function(error) {		    
+			console.log('could not retrieve the Poll Subtitle ' + error);			
+			setTimeout(function(){
+				$.LoadingOverlay("hide");
+			}, 2000);	
+	    });
 	}
 	
 	// Substract 1 hour from actual start and end times while entering values in database. DST not handled
@@ -437,7 +462,12 @@
 				displayMessage("<h2> Voting has stopped now.</h2>");
 				$("#whoiswinner").show();
 			}
-		});
+		}).catch(function(error) {		    
+			console.log('could not retrieve the start and end times ' + error);			
+			setTimeout(function(){
+				$.LoadingOverlay("hide");
+			}, 2000);	
+	    });
 	}
 	
 	function displayMessage(htmlmessage) {
@@ -451,7 +481,7 @@
 </head>
 <body class="bg-2">
 
-<div class="container-fluid jumbotron bg-1  text-center" style="background:#2b2b2f !important">
+<div class="container-fluid bg-1  text-center" style="background:#2b2b2f !important">
   <h1 id="title"></h1>
   <p id="subtitle"></p> 
 </div>
