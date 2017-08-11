@@ -459,7 +459,7 @@
 			
 			if(moment().isBefore(startTime)) {
 				$("#usermessage").toggleClass("alert alert-info");				
-				displayMessage("Poll has not started yet.");
+				displayMessage("Poll has not started yet. Please reload the page when poll starts.");
 				pollNotStarted = true;
 			} else if(moment().isBetween(startTime,endTime) == true) {
 				pollFinished = false;
