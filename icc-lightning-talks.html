@@ -326,9 +326,13 @@
 				$('#sortable').append(talkHtml);
 			}
 		  });
-
-		  $('#sortable li:first').parent().prepend(firstItemHtml);
-		  $('#sortable li:first').toggleClass('blink_me');
+			
+		  //if current selection is available then only have it blinking
+		  if(firstItemHtml.length > 0) {
+			  $('#sortable li:first').parent().prepend(firstItemHtml);
+			  $('#sortable li:first').toggleClass('blink_me');
+		  }
+		  
 		  $("#sortable").show();
 		  $.LoadingOverlay("hide");
 		}).catch(function(error) {		    
