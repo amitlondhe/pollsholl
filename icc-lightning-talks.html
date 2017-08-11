@@ -76,7 +76,7 @@
 	$("#validationmsgs").empty();
 	$("#validationmsgsdiv").hide();
 
-	var startTime,endTime,pollFinished,subtitle;
+	var startTime,endTime,pollFinished,pollNotStarted,subtitle;
 				
 	var entryHtml = '<li style="background-color:#af23a4;color:white;border:1px solid purple;padding-top:5px;padding-bottom:2px;padding-left:2px;padding-right:2px" id="#id" >' + 
 			'<div class="container-fluid" style="padding:0;margin:0 10 0 10">' +
@@ -423,7 +423,10 @@
 			try {
 				endTimeFormatted = moment(endTime).format('MMMM Do YYYY, h:mm:ss a');
 			} catch(error){}
-			if(pollFinished == false) {
+			
+			if(pollNotStarted == true) {
+				$("#subtitle").html("{ Poll has not started yet }");
+			} else if(pollFinished == false) {
 				$("#subtitle").html("{ Move the " + s.val() + " you love to the top until <i class='fa fa-clock-o fa-10 fa-spin' aria-hidden='true'></i> <kbd>"
 				+ endTimeFormatted + " </kbd> <i class='fa fa-clock-o fa-10 fa-spin' aria-hidden='true'></i> }");
 			} else {
@@ -453,7 +456,12 @@
 			console.log("moment:end:" + endTime.format('MMMM Do YYYY, h:mm:ss a'));
 			console.log("startTime ->" + startTime + ", endTime -> " + endTime);
 			console.log("Between " + moment().isBetween(startTime,endTime));
-			if(moment().isBetween(startTime,endTime) == true) {
+			
+			if(moment().isBefore(startTime)) {
+				$("#usermessage").toggleClass("alert alert-info");				
+				displayMessage("Poll has not started yet.");
+				pollNotStarted = true;
+			} else if(moment().isBetween(startTime,endTime) == true) {
 				pollFinished = false;
 				//readEntries(); // Mock behavior
 			} else {
@@ -575,6 +583,8 @@
 	
   
 </div>
+
+
 
 
 
